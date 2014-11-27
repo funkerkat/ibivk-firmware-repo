@@ -41,7 +41,7 @@ enum PacketFields
 
 enum PacketIDs_PC_to_IBIVK
  {
-	 ID_PACKET_BC_TO_RT 		= 0x20,
+	 ID_PACKET_BC_TO_RT 		= 0x50,
 	 ID_PACKET_RT_TO_BC 		= 0x51,
  };
 
@@ -71,12 +71,13 @@ enum DiagnosticAnswerErrorCodes
 	 DIAGNOSTIC_ANSWER_NO_ERRORS			= 0x00,			// "Пакет успешно загружен в ИБИВК"
 	 DIAGNOSTIC_ANSWER_ERROR_CS				= 0x01,			// "Ошибка: несовпадение контрольной суммы"
 	 DIAGNOSTIC_ANSWER_ERROR_ID				= 0x02,			// "Ошибка: неверный идентификатор пакета"
-	 DIAGNOSTIC_ANSWER_ERROR_ALGORITHM 		= 0x03,			// "Ошибка: принятое неверное количество байт"
+	 DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT 		= 0x03,			// "Ошибка: недопустимое количество байт в пакете"
 	 DIAGNOSTIC_ANSWER_ERROR_DIRECTION		= 0x04,			// "Ошибка: неверное направление передачи данных"
 	 DIAGNOSTIC_ANSWER_ERROR_CW_WORDCOUNT	= 0x05,			// "Ошибка: несовпадение количества СД, указанных в КС, с переданными в ИБИВК"
 	 DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY	= 0x06,			// "Ошибка: значение БШВ выходит за допустимые границы"
 	 DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE	= 0x07,			// "Ошибка: время, указанное в пакете, превышает защитный интервал"
 	 DIAGNOSTIC_ANSWER_ERROR_POINTERS		= 0x08,			// "Ошибка адресации"
+	 DIAGNOSTIC_ANSWER_ERROR_ALARM		= 0x09,			// "Ошибка адресации"
  };
 
 #endif /* IBIVK_UART_PACKETS_H_ */

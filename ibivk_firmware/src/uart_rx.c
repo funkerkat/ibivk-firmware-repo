@@ -47,6 +47,7 @@ static int SearchHead(unsigned int n)
 	return EXIT_SUCCESS;
 }
 
+
 static void SearchInBuffer(ReceiveBufferParams* params )
 {
 
@@ -60,10 +61,10 @@ static void SearchInBuffer(ReceiveBufferParams* params )
     	else { (params->validate_cnt)++; }
 	}
     // ----- Определить кол-во байт полезной информации N в пакете: -----
-    else if ((params->buffer_cnt) == SERVICE_BYTES_SIZE)
+    else if ((params->buffer_cnt) == (HEAD_SIZE + PACKETLENGTH_SIZE))
     {
     	// определить длину пакета N (байт)
-    	info_bytes_size = buffer[SERVICE_BYTES_SIZE-1];
+    	info_bytes_size = buffer[(HEAD_SIZE + PACKETLENGTH_SIZE) - 1];
 
     	// проверка допустимого значения N
     	if (info_bytes_size < PACKET_LENGTH_MIN_VALUE)
@@ -76,12 +77,12 @@ static void SearchInBuffer(ReceiveBufferParams* params )
     	}
     }
 	// ----- Продолжить набор байт данных: -----
-    else if ((params->buffer_cnt) < (SERVICE_BYTES_SIZE + info_bytes_size))
+    else if ((params->buffer_cnt) < (HEAD_SIZE + PACKETLENGTH_SIZE + info_bytes_size))
 	{
     	(params->validate_cnt)++;
 	}
 	// ----- Набор данных завершен: -----
-	else if ((params->buffer_cnt) == (SERVICE_BYTES_SIZE + info_bytes_size))
+	else if ((params->buffer_cnt) == (HEAD_SIZE + PACKETLENGTH_SIZE + info_bytes_size))
 	{
 		(params->validate_cnt)++;
 
@@ -92,19 +93,21 @@ static void SearchInBuffer(ReceiveBufferParams* params )
     	// 2. по результату контрольной суммы:
 		if(cs_r == cs_p)
 		{
-    		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_NO_ERRORS);
+			UartDecode(buffer, (HEAD_SIZE + PACKETLENGTH_SIZE + info_bytes_size));
     		BufferClear(params);
 		}
 		else
 		{
-    		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_ERROR_CS);
+			// "Ошибка: несовпадение контрольной суммы"
+			unsigned int id = buffer[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE - 1];
+			DiagnosticAnswer(cs_p, id, DIAGNOSTIC_ANSWER_ERROR_CS);
     		BufferShift(params);
 		}
 	}
 	// ----- Ошибка: -----
 	else
 	{
-		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_ERROR_ALGORITHM);
+		DiagnosticAnswer(0, 0, DIAGNOSTIC_ANSWER_ERROR_ALARM);
 	}
 
 }

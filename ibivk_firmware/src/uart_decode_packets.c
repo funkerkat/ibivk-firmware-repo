@@ -110,7 +110,7 @@ static void Packet_BC_to_RT(Byte* adr_data, unsigned int n)
 	if ((n < BYTECOUNT_PACKET_BC_TO_RT_LOWER) || (n > BYTECOUNT_PACKET_BC_TO_RT_UPPER))
 	{
 		// выдача диагностического ответа с кодом "Ошибка c количиством слов в пакете"
-		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_ERROR_ALGORITHM);
+		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
 		return;
 	}
 
@@ -186,7 +186,7 @@ static void Packet_RT_to_BC(Byte* adr_data, unsigned int n)
 	if (n != BYTECOUNT_PACKET_RT_TO_BC)
 	{
 		// выдача диагностического ответа с кодом "Ошибка количиства слов в пакете"
-		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_ERROR_ALGORITHM);
+		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
 		return;
 	}
 

@@ -1,18 +1,18 @@
 
 #include "xMil1553BC.h"
-
+/*
 static void TestRam(void)
 {
 	int i;
 	int* address;
 	address = (int*)0xA0000000;
 	for (i = 0; i < 0x200; i++) {
-		//*address = i;
+		*address = i;
 		*address = 0;
 		address++;
 	}
 }
-
+*/
 //*********************************************************
 
 static void LoadDataToTransmit(void)
