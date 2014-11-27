@@ -19,6 +19,9 @@ void UartDecodePackets(Byte*, unsigned int);
 int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int dw[], unsigned int n_data);
 int LoadPacketF2(Bshv* b, unsigned int cw);
 
+void DiagnosticAnswer(unsigned int received_cs, unsigned int received_id, unsigned int error_code);
+void UartDecode(unsigned int data[], unsigned int n);
+
 enum HEAD_VALUES
  {
 	 HEAD_0 	= 0x42,
@@ -38,7 +41,7 @@ enum PacketFields
 
 enum PacketIDs_PC_to_IBIVK
  {
-	 ID_PACKET_BC_TO_RT 		= 0x50,
+	 ID_PACKET_BC_TO_RT 		= 0x20,
 	 ID_PACKET_RT_TO_BC 		= 0x51,
  };
 
@@ -54,8 +57,8 @@ enum Packets_Data_Bytecount
 	 BYTECOUNT_PACKET_BC_TO_RT_LOWER 	= (bshv_byte_size + commandword_byte_size + 1*2),
 	 BYTECOUNT_PACKET_BC_TO_RT_UPPER 	= (bshv_byte_size + commandword_byte_size + 32*2),
 	 BYTECOUNT_PACKET_RT_TO_BC 			= (bshv_byte_size + 1*2),
-	 BYTECOUNT_DIAGNOSTIC_ANSWER 		= (1),
-	// BYTECOUNT_DIAGNOSTIC_ANSWER 		= (3),
+	// BYTECOUNT_DIAGNOSTIC_ANSWER 		= (1),
+	 BYTECOUNT_DIAGNOSTIC_ANSWER 		= (3),
  };
 
 enum DiagnosticAnswerPacketLength
@@ -66,8 +69,8 @@ enum DiagnosticAnswerPacketLength
 enum DiagnosticAnswerErrorCodes
  {
 	 DIAGNOSTIC_ANSWER_NO_ERRORS			= 0x00,			// "Пакет успешно загружен в ИБИВК"
-	 DIAGNOSTIC_ANSWER_ERROR_CS				= 0x01,			// несовпадение контрольной суммы
-	 DIAGNOSTIC_ANSWER_ERROR_ID				= 0x02,
+	 DIAGNOSTIC_ANSWER_ERROR_CS				= 0x01,			// "Ошибка: несовпадение контрольной суммы"
+	 DIAGNOSTIC_ANSWER_ERROR_ID				= 0x02,			// "Ошибка: неверный идентификатор пакета"
 	 DIAGNOSTIC_ANSWER_ERROR_ALGORITHM 		= 0x03,			// "Ошибка: принятое неверное количество байт"
 	 DIAGNOSTIC_ANSWER_ERROR_DIRECTION		= 0x04,			// "Ошибка: неверное направление передачи данных"
 	 DIAGNOSTIC_ANSWER_ERROR_CW_WORDCOUNT	= 0x05,			// "Ошибка: несовпадение количества СД, указанных в КС, с переданными в ИБИВК"

@@ -1,7 +1,7 @@
 /*
- * uart_transmit.c
+ * uart_tx.c
  *
- *  Created on: 06.11.2014
+ *  Created on: 27.11.2014
  *      Author: Ludmila
  */
 
@@ -42,12 +42,14 @@ static void AddServiceBytes(unsigned int data[], unsigned int info_bytes_size, u
 }
 
 
-void SendDiagnosticAnswer(unsigned int error_code)
+void DiagnosticAnswer(unsigned int received_cs, unsigned int received_id, unsigned int error_code)
 {
 	unsigned int data[DIAGNOSTIC_ANSWER_TOTAL_LENGTH];
 
 	// Заполнить информационные байты
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 0] = error_code;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 0] = received_cs;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 1] = received_id;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 2] = error_code;
 
 	// Добавить слежубные байты
 	AddServiceBytes(data, DIAGNOSTIC_ANSWER_TOTAL_LENGTH-SERVICE_BYTES_SIZE, ID_DIAGNOSTIC_ANSWER);
