@@ -37,7 +37,7 @@
 #define CONTROL_MSGTO		(0			<< 9)		// Message Timeout
 #define CONTROL_BCEN		(0			<< 4)		// Broadcast Enable
 #define CONTROL_PPEN		(0			<< 2)		// Ping Pong Enable. If PPEN is set HIGH, the core will alternate between Bus A and Bus B on message retries. If set LOW, the core will retry only on the programmed bus as defined in the command block Control Word.
-#define CONTROL_INEN		(1			<< 1)		// Interrupt Log List Enabled
+#define CONTROL_INEN		(0			<< 1)		// Interrupt Log List Enabled
 #define CONTROL (CONTROL_STEX|CONTROL_SBIT|CONTROL_SRST|CONTROL_ETCE|CONTROL_MSGTO|CONTROL_BCEN|CONTROL_PPEN|CONTROL_INEN)
 
 // Register 01 - Operation and Status (MIL1553_REG01_STATUS)
@@ -52,10 +52,45 @@
 // Register 32 - Enhanced (MIL1553_REG32_ENHANCED)
 #define ENHANCED_VERSION	(0			<< 8)		// Version
 #define ENHANCED_LOOPBACK	(0			<< 6) 		// Loopback Enable
-#define ENHANCED_ASYNCMSG	(1			<< 5)		// Enabled Asynchronous Message
+//#define ENHANCED_ASYNCMSG	(1			<< 5)		// Enabled Asynchronous Message
+#define ENHANCED_ASYNCMSG	(0			<< 5)		// Enabled Asynchronous Message
 #define ENHANCED_FASTIMG	(0			<< 4)		// Fast Inter-Message Gap
 #define ENHANCED_FORCEORUN	(0			<< 3)		// Force Overrun
 #define ENHANCED_CLKFREQ	(3			<< 0) 		// 24 MHz
 #define ENHANCED (ENHANCED_VERSION|ENHANCED_LOOPBACK|ENHANCED_ASYNCMSG|ENHANCED_FASTIMG|ENHANCED_FORCEORUN|ENHANCED_CLKFREQ)
 
 #endif /* XMIL1553BC_H_ */
+
+
+
+#define CORE1553_SOFTWARE_RESET()										\
+{																		\
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG00_CONTROL)) = 0x2000;	\
+	asm("nop");															\
+	asm("nop");															\
+	asm("nop");															\
+	asm("nop");															\
+}
+
+
+
+#define CORE1553_INIT(p_cmd_block)														\
+{																						\
+CORE1553_SOFTWARE_RESET()																\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) 				= 0x40000000;	\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG00_CONTROL)) 				= CONTROL;		\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG01_STATUS)) 					= STATUS;		\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG02_CURRENT_COMMAND))			= 0;			\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG03_INTERRUPT_MASK)) 			= 0xFFFF;		\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG04_PENDING_INTERRUPT)) 		= 0;			\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG05_INTERRUPT_POINTER)) 		= 0x10;			\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG06_BUILD_IN_TEST)) 			= 0;			\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG07_MINOR_FRAME_TIMER)) 		= 0;			\
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= (unsigned int)p_cmd_block;	\
+}
+
+
+#define START_EXECUTION()																											\
+{																																	\
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG00_CONTROL)) = *((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG00_CONTROL)) | (1<<15);	\
+}

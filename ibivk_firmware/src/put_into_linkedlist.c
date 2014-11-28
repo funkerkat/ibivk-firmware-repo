@@ -5,14 +5,17 @@
  *      Author: Ludmila
  */
 
+#include <stdlib.h>
 #include "xSystem.h"
 #include "bshv.h"
 
-int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int* dw, unsigned int n_data)
+int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int* dw, unsigned int n)
 {
 
 	int t = 1;
 	t++;
+
+	int* p_data =(int*)malloc(n*sizeof(unsigned int));
 
 	return EXIT_SUCCESS;
 }

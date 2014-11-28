@@ -14,11 +14,27 @@ static void TestRam(void)
 }
 */
 //*********************************************************
+/*
+#define ADDRESS_DATA					0xA0000400
+#define ADDRESS_COMMAND_BLOCK			0xA0000100
+
+#define CORE1553_PAGE_ADDRESS			0xA0000000
+#define CORE1553_ADDRESS_DATA			((ADDRESS_DATA&0xFFFF)/2)
+#define CORE1553_ADDRESS_COMMAND_BLOCK	((ADDRESS_COMMAND_BLOCK&0xFFFF)/2)
+*/
+
+#define ADDRESS_DATA					0xA0000400
+#define ADDRESS_COMMAND_BLOCK			0xA0000100
+
+#define CORE1553_PAGE_ADDRESS			0xA0000000
+#define CORE1553_ADDRESS_DATA			((ADDRESS_DATA - CORE1553_PAGE_ADDRESS)/2)
+#define CORE1553_ADDRESS_COMMAND_BLOCK	((ADDRESS_COMMAND_BLOCK - CORE1553_PAGE_ADDRESS)/2)
+
 
 static void LoadDataToTransmit(void)
 {
 	int* address;
-	address = (int*)0xA0000400;
+	address = (int*)ADDRESS_DATA;
 	int i;
 	int value;
 	for (i = 0; i < 32; i++) {
@@ -73,10 +89,10 @@ static int ResultCommandWord(int RTaddress, int TR, int Subaddress, int WordCoun
 
 
 
-static int Mil1553BC_Start(int nWord)
+int Mil1553BC_Start(int nWord)
 {
 
-
+int* address_cmd_block = (int*)ADDRESS_COMMAND_BLOCK;
 
 #define R		1	// Receive
 #define T		0	// Transmit
@@ -89,8 +105,6 @@ int ValueStatusWord1	= 0;
 int ValueStatusWord2	= 0;
 int ValueBranchAddress	= 0;
 int ValueTimer			= 0;
-
-int* address;
 
 
 // ***********************************
@@ -111,7 +125,7 @@ asm("nop");
 // ***********************************
 // II. Config AHB Page Address Register
 //mko_rg.MIL1553RG02 = (0xA0000000);
-*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) = 0xA0000000;
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) = CORE1553_PAGE_ADDRESS;
 
 // ***********************************
 // III. Init Registers
@@ -140,7 +154,7 @@ asm("nop");
 *((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG07_MINOR_FRAME_TIMER)) = 0;
 
 //mko_cor_rg.CORE1553RG08 = 0x40*2;		// 8.  CORE1553RG08 - Command Block Pointer
-*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) = 0x40*2;
+*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) = CORE1553_ADDRESS_COMMAND_BLOCK;
 
 //mko_cor_rg.CORE1553RG32 = ENHANCED;		// 32. CORE1553RG032 - Enhanced Features
 *((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG32_ENHANCED)) = ENHANCED;
@@ -150,69 +164,70 @@ asm("nop");
 // ***********************************
 // IV. Load COMMAND BLOCK table in memory - 1
 ValueControlWord	= ResultConrolWord(4);
-ValueCommandWord1	= ResultCommandWord(10, T, 1, 2);
+//ValueCommandWord1	= ResultCommandWord(10, T, 1, 0);
+ValueCommandWord1	= ResultCommandWord(1, T, 1, nWord);
 ValueCommandWord2	= 0;
-ValueDataPointer	= (0x100*2);
+ValueDataPointer	= CORE1553_ADDRESS_DATA;
 ValueStatusWord1	= 0;
 ValueStatusWord2	= 0;
 ValueBranchAddress	= 0;
 ValueTimer			= 0;
 
-address = (int*)0xA0000100;
-*(address + 0)  = (ValueControlWord		<<16)|(ValueCommandWord1);
-*(address + 1)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
-*(address + 2)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
-*(address + 3)  = (ValueBranchAddress	<<16)|(ValueTimer);
+
+*(address_cmd_block + 0)  = (ValueControlWord		<<16)|(ValueCommandWord1);
+*(address_cmd_block + 1)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
+*(address_cmd_block + 2)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
+*(address_cmd_block + 3)  = (ValueBranchAddress	<<16)|(ValueTimer);
 
 
 //ValueControlWord	= ResultConrolWord(14);
-//ValueControlWord	= ResultConrolWord(4);
-ValueControlWord	= ResultConrolWord(0);
+ValueControlWord	= ResultConrolWord(4);
+//ValueControlWord	= ResultConrolWord(0);
 ValueCommandWord1	= ResultCommandWord(10, T, 1, 2);
 ValueCommandWord2	= 0;
-ValueDataPointer	= (0x100*2);
+ValueDataPointer	= CORE1553_ADDRESS_DATA;
 ValueStatusWord1	= 0;
 ValueStatusWord2	= 0;
 ValueBranchAddress	= 0;
-ValueTimer			= 0xFFFF;
+ValueTimer			= 0;
 
-address = (int*)0xA0000100;
-*(address + 4)  = (ValueControlWord		<<16)|(ValueCommandWord1);
-*(address + 5)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
-*(address + 6)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
-*(address + 7)  = (ValueBranchAddress	<<16)|(ValueTimer);
+
+*(address_cmd_block + 4)  = (ValueControlWord		<<16)|(ValueCommandWord1);
+*(address_cmd_block + 5)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
+*(address_cmd_block + 6)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
+*(address_cmd_block + 7)  = (ValueBranchAddress	<<16)|(ValueTimer);
 
 
 ValueControlWord	= ResultConrolWord(4);
 ValueCommandWord1	= ResultCommandWord(10, T, 1, 3);
 ValueCommandWord2	= 0;
-ValueDataPointer	= (0x100*2);
+ValueDataPointer	= CORE1553_ADDRESS_DATA;
 ValueStatusWord1	= 0;
 ValueStatusWord2	= 0;
 ValueBranchAddress	= 0;
 ValueTimer			= 0;
 
-address = (int*)0xA0000100;
-*(address + 8)  = (ValueControlWord		<<16)|(ValueCommandWord1);
-*(address + 9)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
-*(address + 10)  = (ValueStatusWord1	<<16)|(ValueStatusWord2);
-*(address + 11)  = (ValueBranchAddress	<<16)|(ValueTimer);
+
+*(address_cmd_block + 8)  = (ValueControlWord		<<16)|(ValueCommandWord1);
+*(address_cmd_block + 9)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
+*(address_cmd_block + 10)  = (ValueStatusWord1	<<16)|(ValueStatusWord2);
+*(address_cmd_block + 11)  = (ValueBranchAddress	<<16)|(ValueTimer);
 
 
 ValueControlWord	= ResultConrolWord(0);
 ValueCommandWord1	= ResultCommandWord(10, T, 1, 4);
 ValueCommandWord2	= 0;
-ValueDataPointer	= (0x100*2);
+ValueDataPointer	= CORE1553_ADDRESS_DATA;
 ValueStatusWord1	= 0;
 ValueStatusWord2	= 0;
 ValueBranchAddress	= 0;
 ValueTimer			= 0;
 
-address = (int*)0xA0000100;
-*(address + 12)  = (ValueControlWord	<<16)|(ValueCommandWord1);
-*(address + 13)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
-*(address + 14)  = (ValueStatusWord1	<<16)|(ValueStatusWord2);
-*(address + 15)  = (ValueBranchAddress	<<16)|(ValueTimer);
+
+*(address_cmd_block + 12)  = (ValueControlWord	<<16)|(ValueCommandWord1);
+*(address_cmd_block + 13)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
+*(address_cmd_block + 14)  = (ValueStatusWord1	<<16)|(ValueStatusWord2);
+*(address_cmd_block + 15)  = (ValueBranchAddress	<<16)|(ValueTimer);
 
 
 

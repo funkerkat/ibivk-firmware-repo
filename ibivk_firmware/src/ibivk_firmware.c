@@ -23,11 +23,14 @@ int main(void)
 	LinkedListDemo();
 	InitSystemBshv();
 	//InitUart();
-	UartSettings();
+//	UartSettings();
 
+	int i = 0;
 	while(1)
 	{
 		;
+		Test1553Core();
+		//Mil1553BC_Start(i);
 	}
 
 	return EXIT_SUCCESS;
