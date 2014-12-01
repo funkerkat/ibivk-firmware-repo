@@ -25,11 +25,11 @@
 
 // internal interrupts:
 #define IRQMP_UART1		FORBIDDEN
-#define IRQMP_UART2		ALLOWED
-#define IRQMP_TIMER1	ALLOWED
-#define IRQMP_TIMER2	ALLOWED
+#define IRQMP_UART2		ALLOWED //ALLOWED
+#define IRQMP_TIMER1	FORBIDDEN //ALLOWED
+#define IRQMP_TIMER2	FORBIDDEN //ALLOWED
 #define IRQMP_TIMER3	FORBIDDEN
-#define IRQMP_B1553BRM	FORBIDDEN
+#define IRQMP_B1553BRM	ALLOWED
 // external interrupts:
 #define IRQMP_1HZ		FORBIDDEN
 
@@ -52,6 +52,25 @@
 #define IRQMP_MASK (IRQMP_1|IRQMP_2|IRQMP_3|IRQMP_4|IRQMP_5|IRQMP_6|IRQMP_7|IRQMP_8|IRQMP_9|IRQMP_10|IRQMP_11|IRQMP_12|IRQMP_13|IRQMP_14|IRQMP_15)
 
 // ----- IRQMP API -----
+#define IRQMP_CLEAR()																	\
+{																						\
+	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_LEVEL)) 	= 0;					\
+	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_PENDING)) = 0;					\
+	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_FORCE)) 	= 0;					\
+	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_CLEAR)) 	= 0;					\
+	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_MASK))	= 0;					\
+}
+
+#define IRQMP_ENABLE()																	\
+{																						\
+	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_MASK)) = IRQMP_MASK;				\
+}
+
+#define IRQMP_DISABLE()																	\
+{																						\
+	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_MASK)) = 0;						\
+}
+
 #define IRQMP_INIT()																	\
 {																						\
 	*((int*)(IRQMP_BASE_ADDRESS + IRQMP_REG_INTERRUPT_MASK)) = IRQMP_MASK;				\
