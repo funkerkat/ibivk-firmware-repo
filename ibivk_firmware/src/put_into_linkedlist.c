@@ -8,22 +8,21 @@
 #include <stdlib.h>
 #include "xSystem.h"
 #include "bshv.h"
+#include "bus_controller.h"
 
 int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int* dw, unsigned int n)
 {
 
-	int t = 1;
-	t++;
+	EntryCore1553 entry;
+	Load1553MessageF1(&entry, cw, dw);
 
-	int* p_data =(int*)malloc(n*sizeof(unsigned int));
 
 	return EXIT_SUCCESS;
 }
 
 int LoadPacketF2(Bshv* b, unsigned int cw)
 {
-	int t = 1;
-	t++;
+
 
 	return EXIT_SUCCESS;
 }

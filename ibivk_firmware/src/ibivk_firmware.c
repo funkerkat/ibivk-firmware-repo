@@ -39,7 +39,8 @@ int main(void)
 
 	TestRam();
 	core1553_irqs_cnt = 0;
-	LoadCommandBlockAndData();
+
+
 	CORE1553_INIT();
 
 
@@ -51,7 +52,7 @@ int main(void)
 	while(1)
 	{
 		;
-		Test1553Core();
+		//Test1553Core();
 		//Mil1553BC_Start(i);
 
 

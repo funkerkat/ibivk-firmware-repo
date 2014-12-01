@@ -8,10 +8,7 @@
 #include "xMIL1553BC.h"
 #include "bus_controller.h"
 
-unsigned int command_block[COMMAND_BLOCK_SIZE_ULONG*2];
-
-unsigned int data_test[16];
-
+/*
 static unsigned int MakeControlWord(unsigned int opcode)
 {
 	ControlWordStruct ControlWord;
@@ -24,104 +21,56 @@ static unsigned int MakeControlWord(unsigned int opcode)
 	ControlWord.BAME 			= 0;		// Read-only			Protocol Message Error in RT response
 	return (ControlWord.Opcode<<12)|(ControlWord.Retry<<10)|(ControlWord.CHAB<<9)|(ControlWord.RTRT<<8)|(ControlWord.ConditionCode<<1)|(ControlWord.BAME<<0);
 }
+*/
 
-void CommandBlockInit()
+
+
+void Load1553MessageF1(EntryCore1553* entry, unsigned short cw, unsigned short data_words[])
 {
-	BusControllerCommandBlock BC_command_block_1;
-	BC_command_block_1.ValueControlWord	= MakeControlWord(EXECUTE_CONTINUE);
-	BC_command_block_1.ValueCommandWord1 = 0;
-	BC_command_block_1.ValueCommandWord2 = 0;
-	BC_command_block_1.ValueDataPointer	= 0;
-	BC_command_block_1.ValueStatusWord1	= 0;
-	BC_command_block_1.ValueStatusWord2	= 0;
-	BC_command_block_1.ValueBranchAddress = 0;
-	BC_command_block_1.ValueTimer = 0;
+	// Вычислить указатели
+	unsigned int p_cmd = (unsigned int)(&(entry->cmd_block_1.ControlWord));
+	unsigned int p_cmd_masked = p_cmd & 0xFFFE0000;
+	unsigned int p_data = (unsigned int)(&(entry->data_words));
 
-	BusControllerCommandBlock BC_command_block_2;
-	BC_command_block_2.ValueControlWord	= MakeControlWord(END_OF_LIST);
-	BC_command_block_2.ValueCommandWord1 = 0;
-	BC_command_block_2.ValueCommandWord2 = 0;
-	BC_command_block_2.ValueDataPointer	= 0;
-	BC_command_block_2.ValueStatusWord1	= 0;
-	BC_command_block_2.ValueStatusWord2	= 0;
-	BC_command_block_2.ValueBranchAddress = 0;
-	BC_command_block_2.ValueTimer = 0;
+	// Заложить командные блоки в память
+	entry->cmd_block_1.ControlWord = (EXECUTE_CONTINUE<<12)|(Retry<<10)|(CHAB<<9)|(RTRT<<8)|(ConditionCode<<1)|(BAME<<0);
+	entry->cmd_block_1.CommandWord1 = cw;
+	entry->cmd_block_1.CommandWord2 = 0;
+	entry->cmd_block_1.DataPointer = (p_data - p_cmd_masked)/2;
+	entry->cmd_block_1.StatusWord1 = 0;
+	entry->cmd_block_1.StatusWord2 = 0;
+	entry->cmd_block_1.BranchAddress = 0;
+	entry->cmd_block_1.Timer = 0;
 
-	command_block[0]  = (BC_command_block_1.ValueControlWord	<<16) | (BC_command_block_1.ValueCommandWord1	<<0);
-	command_block[1]  = (BC_command_block_1.ValueCommandWord2	<<16) | (BC_command_block_1.ValueDataPointer	<<0);
-	command_block[2]  = (BC_command_block_1.ValueStatusWord1	<<16) | (BC_command_block_1.ValueStatusWord2	<<0);
-	command_block[3]  = (BC_command_block_1.ValueBranchAddress	<<16) | (BC_command_block_1.ValueTimer			<<0);
+	entry->cmd_block_2.ControlWord = (END_OF_LIST<<12)|(Retry<<10)|(CHAB<<9)|(RTRT<<8)|(ConditionCode<<1)|(BAME<<0);
+	entry->cmd_block_2.CommandWord1 = 0;
+	entry->cmd_block_2.CommandWord2 = 0;
+	entry->cmd_block_2.DataPointer = 0;
+	entry->cmd_block_2.StatusWord1 = 0;
+	entry->cmd_block_2.StatusWord2 = 0;
+	entry->cmd_block_2.BranchAddress = 0;
+	entry->cmd_block_2.Timer = 0;
 
-	command_block[4]  = (BC_command_block_2.ValueControlWord	<<16) | (BC_command_block_2.ValueCommandWord1	<<0);
-	command_block[5]  = (BC_command_block_2.ValueCommandWord2	<<16) | (BC_command_block_2.ValueDataPointer	<<0);
-	command_block[6]  = (BC_command_block_2.ValueStatusWord1	<<16) | (BC_command_block_2.ValueStatusWord2	<<0);
-	command_block[7]  = (BC_command_block_2.ValueBranchAddress	<<16) | (BC_command_block_2.ValueTimer			<<0);
+	// Вычислить из командного слова количество слов данных
+	unsigned int n_data_words = cw & 0x1F;
 
-}
-
-void CommandBlockUpdate(unsigned int cw, unsigned int data_pointer)
-{
-	command_block[0] = command_block[0] | cw;
-	command_block[1] = data_pointer;
-}
-
-
-void LoadCommandBlockAndData()
-{
-	// Load Data
-	int* address_data;
-	address_data = (int*)0xA0000400;
+	// Заложить данные в память
 	int i;
-	int value;
-	for (i = 0; i < 32; i++) {
-		value = (((2*i)+1)<<16)|(2*i+2);
-		*(address_data + 1*i) = value;
+	for (i=0; i<n_data_words; i++)
+	{
+		entry->data_words[i] = data_words[i];
 	}
 
+	// Установить указатели в регистры Core1553 и Leon
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) 				= p_cmd_masked;
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= (p_cmd - p_cmd_masked)/2;
 
-	// Load CommandBlock
-	#define R		1	// Receive
-	#define T		0	// Transmit
+	// ----------------------------------------
+	unsigned int x1 = (p_cmd - p_cmd_masked);
+	unsigned int x2 = (p_cmd - p_cmd_masked)/2;
 
-	int ValueControlWord	= 0;
-	int ValueCommandWord1	= 0;
-	int ValueCommandWord2	= 0;
-	int ValueDataPointer	= 0;
-	int ValueStatusWord1	= 0;
-	int ValueStatusWord2	= 0;
-	int ValueBranchAddress	= 0;
-	int ValueTimer			= 0;
-
-	int* address;
-	address = (int*)0xA0000100;
-
-
-	ValueControlWord	= ResultConrolWord(4);
-	ValueCommandWord1	= ResultCommandWord(10, T, 1, 2);
-	ValueCommandWord2	= 0;
-	ValueDataPointer	= (0x100*2);
-	ValueStatusWord1	= 0;
-	ValueStatusWord2	= 0;
-	ValueBranchAddress	= 0;
-	ValueTimer			= 0;
-	*(address + 0)  = (ValueControlWord		<<16)|(ValueCommandWord1);
-	*(address + 1)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
-	*(address + 2)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
-	*(address + 3)  = (ValueBranchAddress	<<16)|(ValueTimer);
-
-	ValueControlWord	= ResultConrolWord(0);
-	ValueCommandWord1	= ResultCommandWord(10, T, 1, 2);
-	ValueCommandWord2	= 0;
-	ValueDataPointer	= (0x100*2);
-	ValueStatusWord1	= 0;
-	ValueStatusWord2	= 0;
-	ValueBranchAddress	= 0;
-	ValueTimer			= 0xFFFF;
-	*(address + 4)  = (ValueControlWord		<<16)|(ValueCommandWord1);
-	*(address + 5)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
-	*(address + 6)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
-	*(address + 7)  = (ValueBranchAddress	<<16)|(ValueTimer);
-
+	int t = 1;
+	t++;
 }
 
 
@@ -130,8 +79,20 @@ void Test1553Core()
 
 	CORE1553_INIT();
 
-	EntryCore1553 entry;
 
+	unsigned short cw = 0x0823;
+	int i;
+	unsigned short dw[32];
+	for (i=0; i<32; i++)
+	{
+		dw[i] = (0xFF<<8) + i;
+	}
+
+
+	EntryCore1553 entry;
+	Load1553MessageF1(&entry, cw, dw);
+
+	/*
 	unsigned int p_cmd = (unsigned int)(&(entry.cmd_block_1.ControlWord));
 	unsigned int p_cmd_masked = p_cmd & 0xFFFE0000;
 
@@ -155,7 +116,6 @@ void Test1553Core()
 	entry.cmd_block_2.BranchAddress = 0;
 	entry.cmd_block_2.Timer = 0;
 
-
 	int i;
 	for (i=0; i<32; i++)
 	{
@@ -164,7 +124,7 @@ void Test1553Core()
 
 	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) 				= p_cmd_masked;
 	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= (p_cmd - p_cmd_masked)/2;
-
+*/
 
 	START_EXECUTION();
 
