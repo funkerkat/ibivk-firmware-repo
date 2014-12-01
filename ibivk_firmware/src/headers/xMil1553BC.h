@@ -90,10 +90,10 @@
 }
 
 
-#define CORE1553_UPDATE_PAGE(page_adr)														\
+#define CORE1553_RELOAD(adr_page, adr_core1553)												\
 {																							\
-	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) 				= page_adr;		\
-	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= 0;			\
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) 				= adr_page;		\
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= adr_core1553;	\
 }
 
 

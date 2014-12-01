@@ -32,6 +32,10 @@ void Load1553MessageF1(EntryCore1553* entry, unsigned short cw, unsigned short d
 	unsigned int p_cmd_masked = p_cmd & 0xFFFE0000;
 	unsigned int p_data = (unsigned int)(&(entry->data_words));
 
+	// Сохранить указатели
+	entry->reg_leon = p_cmd_masked;
+	entry->reg_core1553 = (p_cmd - p_cmd_masked)/2;
+
 	// Заложить командные блоки в память
 	entry->cmd_block_1.ControlWord = (EXECUTE_CONTINUE<<12)|(Retry<<10)|(CHAB<<9)|(RTRT<<8)|(ConditionCode<<1)|(BAME<<0);
 	entry->cmd_block_1.CommandWord1 = cw;
@@ -60,17 +64,6 @@ void Load1553MessageF1(EntryCore1553* entry, unsigned short cw, unsigned short d
 	{
 		entry->data_words[i] = data_words[i];
 	}
-
-	// Установить указатели в регистры Core1553 и Leon
-	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) 				= p_cmd_masked;
-	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= (p_cmd - p_cmd_masked)/2;
-
-	// ----------------------------------------
-	unsigned int x1 = (p_cmd - p_cmd_masked);
-	unsigned int x2 = (p_cmd - p_cmd_masked)/2;
-
-	int t = 1;
-	t++;
 }
 
 

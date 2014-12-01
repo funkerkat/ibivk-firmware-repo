@@ -49,6 +49,8 @@ typedef struct EntryCore1553
 	CommandBlock cmd_block_1;
 	CommandBlock cmd_block_2;
 	unsigned short data_words[32];
+	unsigned int reg_leon;
+	unsigned int reg_core1553;
 }EntryCore1553;
 
 void Load1553MessageF1(EntryCore1553* entry, unsigned short cw, unsigned short data_words[]);
