@@ -75,7 +75,7 @@ static unsigned int GetCommandWordFromPacket(unsigned int data[])
 	unsigned int cw = (temp1 << 8) | (temp2 << 0);
 	return cw;
 }
-
+/*
 static unsigned int GetDataWordsFromPacket2(unsigned int data[], unsigned int n_datawords, unsigned int data_longs[])
 {
 	unsigned int n_datalongs = n_datawords / 2;
@@ -118,7 +118,7 @@ static unsigned int GetDataWordsFromPacket2(unsigned int data[], unsigned int n_
 	}
 
 }
-
+*/
 static void GetDataWordsFromPacket(unsigned int data[], unsigned int n_data_shorts, unsigned short data_shorts[])
 {
 	int i;

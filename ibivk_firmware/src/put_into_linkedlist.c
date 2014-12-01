@@ -9,14 +9,16 @@
 #include "xSystem.h"
 #include "bshv.h"
 #include "bus_controller.h"
+#include "xMil1553BC.h"
 
 
-int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int* dw, unsigned int n)
+int LoadPacketF1(Bshv* b, unsigned int cw, unsigned short dw[])
 {
 
 	EntryCore1553 entry;
 	Load1553MessageF1(&entry, cw, dw);
 
+	START_EXECUTION();
 
 	return EXIT_SUCCESS;
 }
