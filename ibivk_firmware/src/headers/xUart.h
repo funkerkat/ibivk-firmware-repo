@@ -127,14 +127,9 @@
 
 
 
-#define UART2_SET_BAUDRATE(baudrate)													\
-{																						\
-	*((int*)(UART2_BASE_ADDRESS + UART_REG_SCALER)) = SYSTEM_CLOCK/8/(baudrate);		\
-}
+#define UART2_SET_BAUDRATE(baudrate) {*((int*)(UART2_BASE_ADDRESS + UART_REG_SCALER)) = SYSTEM_CLOCK/8/(baudrate);}
+#define UART2_SET_CONTROL_REG()	{*((int*)(UART2_BASE_ADDRESS + UART_REG_CONTROL)) = UART_CONTROL_VALUE;}
 
-#define UART2_SET_CONTROL_REG()															\
-{																						\
-	*((int*)(UART2_BASE_ADDRESS + UART_REG_CONTROL)) = UART_CONTROL_VALUE;				\
-}
+#define UART_INIT(baudrate){ UART2_SET_BAUDRATE(baudrate); UART2_SET_CONTROL_REG(); }
 
 #endif /* XUART_H_ */

@@ -15,8 +15,15 @@
 int LoadPacketF1(Bshv* b, unsigned int cw, unsigned short dw[])
 {
 
-	EntryCore1553 entry;
-	Load1553MessageF1(&entry, cw, dw);
+	//unsigned short t[32];
+
+
+	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));
+
+	//EntryCore1553 entry;
+//	int x = &entry;
+
+	Load1553MessageF1(p_entry, cw, dw);
 
 	START_EXECUTION();
 

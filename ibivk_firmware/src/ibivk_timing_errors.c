@@ -29,16 +29,6 @@ void InitUart(void);
 void GpioToggle(int);
 
 
-int main_mko(void)
-{
-
-	while(1)
-	{
-		Mil1553BC_Start(2);
-	}
-
-	return EXIT_SUCCESS;
-}
 
 
 
