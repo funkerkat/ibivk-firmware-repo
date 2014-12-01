@@ -165,7 +165,7 @@ asm("nop");
 // IV. Load COMMAND BLOCK table in memory - 1
 ValueControlWord	= ResultConrolWord(4);
 //ValueCommandWord1	= ResultCommandWord(10, T, 1, 0);
-ValueCommandWord1	= ResultCommandWord(1, T, 1, nWord);
+ValueCommandWord1	= ResultCommandWord(10, T, 1, 3);
 ValueCommandWord2	= 0;
 ValueDataPointer	= CORE1553_ADDRESS_DATA;
 ValueStatusWord1	= 0;

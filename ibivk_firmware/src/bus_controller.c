@@ -66,18 +66,113 @@ void CommandBlockUpdate(unsigned int cw, unsigned int data_pointer)
 }
 
 
+void LoadCommandBlockAndData()
+{
+	// Load Data
+	int* address_data;
+	address_data = (int*)0xA0000400;
+	int i;
+	int value;
+	for (i = 0; i < 32; i++) {
+		value = (((2*i)+1)<<16)|(2*i+2);
+		*(address_data + 1*i) = value;
+	}
+
+
+	// Load CommandBlock
+	#define R		1	// Receive
+	#define T		0	// Transmit
+
+	int ValueControlWord	= 0;
+	int ValueCommandWord1	= 0;
+	int ValueCommandWord2	= 0;
+	int ValueDataPointer	= 0;
+	int ValueStatusWord1	= 0;
+	int ValueStatusWord2	= 0;
+	int ValueBranchAddress	= 0;
+	int ValueTimer			= 0;
+
+	int* address;
+	address = (int*)0xA0000100;
+
+
+	ValueControlWord	= ResultConrolWord(4);
+	ValueCommandWord1	= ResultCommandWord(10, T, 1, 2);
+	ValueCommandWord2	= 0;
+	ValueDataPointer	= (0x100*2);
+	ValueStatusWord1	= 0;
+	ValueStatusWord2	= 0;
+	ValueBranchAddress	= 0;
+	ValueTimer			= 0;
+	*(address + 0)  = (ValueControlWord		<<16)|(ValueCommandWord1);
+	*(address + 1)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
+	*(address + 2)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
+	*(address + 3)  = (ValueBranchAddress	<<16)|(ValueTimer);
+
+	ValueControlWord	= ResultConrolWord(0);
+	ValueCommandWord1	= ResultCommandWord(10, T, 1, 2);
+	ValueCommandWord2	= 0;
+	ValueDataPointer	= (0x100*2);
+	ValueStatusWord1	= 0;
+	ValueStatusWord2	= 0;
+	ValueBranchAddress	= 0;
+	ValueTimer			= 0xFFFF;
+	*(address + 4)  = (ValueControlWord		<<16)|(ValueCommandWord1);
+	*(address + 5)  = (ValueCommandWord2	<<16)|(ValueDataPointer);
+	*(address + 6)  = (ValueStatusWord1		<<16)|(ValueStatusWord2);
+	*(address + 7)  = (ValueBranchAddress	<<16)|(ValueTimer);
+
+}
+
+
 void Test1553Core()
 {
-	CommandBlockInit();
 
-	unsigned int x1 = (unsigned int)command_block;
-	unsigned int x2 = (unsigned int)(&command_block);
+	CORE1553_INIT();
+
+	EntryCore1553 entry;
+
+	unsigned int p_cmd = (unsigned int)(&(entry.cmd_block_1.ControlWord));
+	unsigned int p_cmd_masked = p_cmd & 0xFFFE0000;
+
+	unsigned int p_data = (unsigned int)(&(entry.data_words));
+
+	entry.cmd_block_1.ControlWord = (EXECUTE_CONTINUE<<12)|(Retry<<10)|(CHAB<<9)|(RTRT<<8)|(ConditionCode<<1)|(BAME<<0);
+	entry.cmd_block_1.CommandWord1 = 0x0822;
+	entry.cmd_block_1.CommandWord2 = 0;
+	entry.cmd_block_1.DataPointer = (p_data - p_cmd_masked)/2;
+	entry.cmd_block_1.StatusWord1 = 0;
+	entry.cmd_block_1.StatusWord2 = 0;
+	entry.cmd_block_1.BranchAddress = 0;
+	entry.cmd_block_1.Timer = 0;
+
+	entry.cmd_block_2.ControlWord = (END_OF_LIST<<12)|(Retry<<10)|(CHAB<<9)|(RTRT<<8)|(ConditionCode<<1)|(BAME<<0);
+	entry.cmd_block_2.CommandWord1 = 0;
+	entry.cmd_block_2.CommandWord2 = 0;
+	entry.cmd_block_2.DataPointer = 0;
+	entry.cmd_block_2.StatusWord1 = 0;
+	entry.cmd_block_2.StatusWord2 = 0;
+	entry.cmd_block_2.BranchAddress = 0;
+	entry.cmd_block_2.Timer = 0;
 
 
-	CORE1553_INIT(command_block);
+	int i;
+	for (i=0; i<32; i++)
+	{
+		entry.data_words[i] = (0xAB<<8) + i;
+	}
 
-	CommandBlockUpdate(0x0821, (unsigned int)data_test);
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_AHB_PAGE_ADDRESS)) 				= p_cmd_masked;
+	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= (p_cmd - p_cmd_masked)/2;
 
+
+	START_EXECUTION();
+
+
+
+
+	int t = 0;
+	t++;
 
 
 }

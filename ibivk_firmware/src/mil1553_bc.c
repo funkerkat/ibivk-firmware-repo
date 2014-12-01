@@ -1,18 +1,28 @@
 
 #include "xMil1553BC.h"
-/*
-static void TestRam(void)
+
+void TestRam(void)
 {
 	int i;
 	int* address;
 	address = (int*)0xA0000000;
 	for (i = 0; i < 0x200; i++) {
-		*address = i;
+		//*address = i;
 		*address = 0;
 		address++;
 	}
 }
-*/
+
+void CleanLogList(unsigned int log[], unsigned int n)
+{
+	int i;
+	for(i=0; i<n; i++)
+	{
+		log[i] = 0;
+	}
+
+}
+
 //*********************************************************
 
 static void LoadDataToTransmit(void)
@@ -28,7 +38,7 @@ static void LoadDataToTransmit(void)
 }
 
 
-static int ResultConrolWord(int opcode)
+int ResultConrolWord(int opcode)
 {
 	struct ControlWordStruct {
 		unsigned int Opcode;
@@ -50,7 +60,7 @@ static int ResultConrolWord(int opcode)
 	return (ControlWord.Opcode<<12)|(ControlWord.Retry<<10)|(ControlWord.CHAB<<9)|(ControlWord.RTRT<<8)|(ControlWord.ConditionCode<<1)|(ControlWord.BAME<<0);
 }
 
-static int ResultCommandWord(int RTaddress, int TR, int Subaddress, int WordCount)
+int ResultCommandWord(int RTaddress, int TR, int Subaddress, int WordCount)
 {
 	struct CommandWordStruct {
 		unsigned int RTAddress;

@@ -98,9 +98,24 @@ void Handler_irq_13()
 	// default
 }
 
+
+#include "xIrqmp.h"
+#include "xMil1553BC.h"
+unsigned int core1553_irqs[32];
+unsigned int core1553_irqs_cnt;
+
 void Handler_irq_14()
 {
+	IRQMP_DISABLE();
+
 	// B1553BRM
+	int t = 1;
+	t++;
+
+	core1553_irqs[core1553_irqs_cnt] = *((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG04_PENDING_INTERRUPT));
+	core1553_irqs_cnt++;
+
+	IRQMP_ENABLE();
 }
 
 void Handler_irq_15()
@@ -158,3 +173,4 @@ void InitInterruptHandlers()
 	*/
 
 }
+
