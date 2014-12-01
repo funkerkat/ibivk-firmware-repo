@@ -169,13 +169,14 @@ static void Packet_BC_to_RT(Byte* adr_data, unsigned int n)
 	GetDataWordsFromPacket(&adr_data, dw, n);
 
 	// загрузить в память ИБИВК
+	/*
 	int load_result = LoadPacketF1(&packet_bshv, cw, dw, n/2);
 	if(load_result == EXIT_SUCCESS)
 	{
 		// выдача диагностического ответа с кодом "Пакет успешно загружен в ИБИВК"
 		SendDiagnosticAnswer(DIAGNOSTIC_ANSWER_NO_ERRORS);
 	}
-
+*/
 
 	int t = 1;
 	t++;

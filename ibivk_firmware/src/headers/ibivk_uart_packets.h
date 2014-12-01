@@ -16,7 +16,7 @@
 void SendDiagnosticAnswer(unsigned int);
 //void SendDiagnosticAnswer(unsigned int error_code, unsigned int received_cs, unsigned int received_id);
 void UartDecodePackets(Byte*, unsigned int);
-int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int dw[], unsigned int n_data);
+int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int dw[]);
 int LoadPacketF2(Bshv* b, unsigned int cw);
 
 void DiagnosticAnswer(unsigned int received_cs, unsigned int received_id, unsigned int error_code);

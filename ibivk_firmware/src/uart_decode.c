@@ -76,7 +76,7 @@ static unsigned int GetCommandWordFromPacket(unsigned int data[])
 	return cw;
 }
 
-static unsigned int GetDataWordsFromPacket(unsigned int data[], unsigned int n_datawords, unsigned int data_longs[])
+static unsigned int GetDataWordsFromPacket2(unsigned int data[], unsigned int n_datawords, unsigned int data_longs[])
 {
 	unsigned int n_datalongs = n_datawords / 2;
 	unsigned int remainder = n_datawords - n_datalongs*2;
@@ -119,6 +119,17 @@ static unsigned int GetDataWordsFromPacket(unsigned int data[], unsigned int n_d
 
 }
 
+static void GetDataWordsFromPacket(unsigned int data[], unsigned int n_data_shorts, unsigned short data_shorts[])
+{
+	int i;
+	for (i=0; i<n_data_shorts; i++)
+	{
+		unsigned int temp1, temp2;
+		temp1 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (2*i + 0) - 1];
+		temp2 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (2*i + 1) - 1];
+		data_shorts[i] = (temp1 << (1*8)) | (temp2 << (0*8));
+	}
+}
 static unsigned int GetDataWordCount(unsigned int cw)
 {
 	unsigned int wordcount = (cw & 0x1F);
@@ -187,11 +198,18 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	}
 
 	// 4. Декодировать слова данных
+	/*
 	unsigned int data_longs[16];
 	unsigned int n_data_longs = GetDataWordsFromPacket(data, n_datawords, data_longs);
+	*/
+	unsigned short data_shorts[32];
+	GetDataWordsFromPacket(data, n_datawords, data_shorts);
 
 	// 5. Загрузить в память ИБИВК
+	/*
 	int load_result = LoadPacketF1(&packet_bshv, cw, data_longs, n_data_longs);
+	*/
+	int load_result = LoadPacketF1(&packet_bshv, cw, data_shorts);
 	if(load_result == EXIT_SUCCESS)
 	{
 		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);

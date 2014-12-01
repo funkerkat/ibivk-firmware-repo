@@ -8,7 +8,7 @@
 #include "xSystem.h"
 #include "bshv.h"
 
-int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int* dw, unsigned int n_data)
+int LoadPacketF1(Bshv* b, unsigned int cw, unsigned short* dw)
 {
 
 	int t = 1;
