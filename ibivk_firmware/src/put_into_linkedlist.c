@@ -10,11 +10,8 @@
 #include "bshv.h"
 #include "bus_controller.h"
 
-<<<<<<< HEAD
-int LoadPacketF1(Bshv* b, unsigned int cw, unsigned short* dw)
-=======
+
 int LoadPacketF1(Bshv* b, unsigned int cw, unsigned int* dw, unsigned int n)
->>>>>>> origin/mkio-lib
 {
 
 	EntryCore1553 entry;
@@ -30,3 +27,4 @@ int LoadPacketF2(Bshv* b, unsigned int cw)
 
 	return EXIT_SUCCESS;
 }
+
