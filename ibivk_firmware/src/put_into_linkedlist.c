@@ -26,7 +26,12 @@ int LoadPacketF1(Bshv* b, unsigned int cw, unsigned short dw[])
 
 int LoadPacketF2(Bshv* b, unsigned int cw)
 {
+	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));
 
+	Load1553MessageF2(p_entry, cw);
+
+	CORE1553_RELOAD(p_entry->reg_leon, p_entry->reg_core1553);
+	START_EXECUTION();
 
 	return EXIT_SUCCESS;
 }

@@ -54,5 +54,6 @@ typedef struct EntryCore1553
 }EntryCore1553;
 
 void Load1553MessageF1(EntryCore1553* entry, unsigned short cw, unsigned short data_words[]);
+void Load1553MessageF2(EntryCore1553* entry, unsigned short cw);
 
 #endif /* BUS_CONTROLLER_H_ */
