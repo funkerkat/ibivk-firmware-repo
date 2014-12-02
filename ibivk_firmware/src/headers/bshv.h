@@ -8,19 +8,17 @@
 #ifndef BSHV_H_
 #define BSHV_H_
 
-/*
-typedef struct Bshv
+typedef struct _Bshv
 {
-	unsigned int fouryears;
-	unsigned int day;
-	unsigned int hour;
-	unsigned int minute;
-	unsigned int second;
-	unsigned int microsecond;
+	signed int fouryears;
+	signed int day;
+	signed int hour;
+	signed int minute;
+	signed int second;
 }Bshv;
-*/
 
-typedef struct Bshv
+/*
+typedef struct _BshvExtention
 {
 	signed int fouryears;
 	signed int day;
@@ -28,7 +26,14 @@ typedef struct Bshv
 	signed int minute;
 	signed int second;
 	signed int microsecond;
-}Bshv;
+}BshvExtention;
+*/
+
+typedef struct _BshvExtention
+{
+	Bshv myBshv;
+	signed int microsecond;
+}BshvExtention;
 
 extern Bshv system_bshv;
 

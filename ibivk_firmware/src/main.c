@@ -20,7 +20,7 @@ void LinkedListDemo(void);
 void InitSystemBshv(void);
 void UartSettings(void);
 
-
+#include "node_bshv.h"
 
 int main(void)
 {
@@ -36,6 +36,10 @@ int main(void)
 
 	IRQMP_ENABLE();
 
+
+	InitListBshv();
+
+	int n = CountItemsInListBshv(&node_bshv_start);
 
 	while(1)
 	{

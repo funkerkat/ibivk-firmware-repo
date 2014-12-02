@@ -10,25 +10,25 @@
 #include "bshv.h"
 #include "mil1553.h"
 
-static void GetBshvFromPacket(unsigned int data[], Bshv* packet_bshv)
+static void GetBshvFromPacket(unsigned int data[], BshvExtention* packet_bshv)
 {
 	// декодировать номер четырехлетия
-	packet_bshv->fouryears = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 0 - 1];
+	packet_bshv->myBshv.fouryears = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 0 - 1];
 
 	// декодировать номер суток
 	unsigned int temp1, temp2;
 	temp1 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 1 - 1];
 	temp2 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 2 - 1];
-	packet_bshv->day = (temp1 << 8) | (temp2 << 0);
+	packet_bshv->myBshv.day = (temp1 << 8) | (temp2 << 0);
 
 	// декодировать номер часа
-	packet_bshv->hour = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 3 - 1];
+	packet_bshv->myBshv.hour = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 3 - 1];
 
 	// декодировать номер минуты
-	packet_bshv->minute = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 4 - 1];
+	packet_bshv->myBshv.minute = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 4 - 1];
 
 	// декодировать номер секунды
-	packet_bshv->second = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 5 - 1];
+	packet_bshv->myBshv.second = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE+1) + 5 - 1];
 
 
 	// декодировать номер микросекунды
@@ -41,26 +41,26 @@ static void GetBshvFromPacket(unsigned int data[], Bshv* packet_bshv)
 	packet_bshv->microsecond = ((t1 << 8*2)|(t2 << 8*1)|(t3 << 8*0));
 }
 
-static int ValidateBshvBoundaries(Bshv* b)
+static int ValidateBshvBoundaries(BshvExtention* b)
 {
-	if ((b->fouryears < BSHV_FOURYEARS_LOWER_BOUNDARY) ||
-		(b->fouryears > BSHV_FOURYEARS_UPPER_BOUNDARY))
+	if ((b->myBshv.fouryears < BSHV_FOURYEARS_LOWER_BOUNDARY) ||
+		(b->myBshv.fouryears > BSHV_FOURYEARS_UPPER_BOUNDARY))
 	{ return EXIT_FAILURE; }
 
-	if ((b->day < BSHV_DAY_LOWER_BOUNDARY) ||
-		(b->day > BSHV_DAY_UPPER_BOUNDARY))
+	if ((b->myBshv.day < BSHV_DAY_LOWER_BOUNDARY) ||
+		(b->myBshv.day > BSHV_DAY_UPPER_BOUNDARY))
 	{ return EXIT_FAILURE; }
 
-	if ((b->hour < BSHV_HOUR_LOWER_BOUNDARY) ||
-		(b->hour > BSHV_HOUR_UPPER_BOUNDARY))
+	if ((b->myBshv.hour < BSHV_HOUR_LOWER_BOUNDARY) ||
+		(b->myBshv.hour > BSHV_HOUR_UPPER_BOUNDARY))
 	{ return EXIT_FAILURE; }
 
-	if ((b->minute < BSHV_MINUTE_LOWER_BOUNDARY) ||
-		(b->minute > BSHV_MINUTE_UPPER_BOUNDARY))
+	if ((b->myBshv.minute < BSHV_MINUTE_LOWER_BOUNDARY) ||
+		(b->myBshv.minute > BSHV_MINUTE_UPPER_BOUNDARY))
 	{ return EXIT_FAILURE; }
 
-	if ((b->second < BSHV_SECOND_LOWER_BOUNDARY) ||
-		(b->second > BSHV_SECOND_UPPER_BOUNDARY))
+	if ((b->myBshv.second < BSHV_SECOND_LOWER_BOUNDARY) ||
+		(b->myBshv.second > BSHV_SECOND_UPPER_BOUNDARY))
 	{ return EXIT_FAILURE; }
 
 	return EXIT_SUCCESS;
@@ -75,50 +75,7 @@ static unsigned int GetCommandWordFromPacket(unsigned int data[])
 	unsigned int cw = (temp1 << 8) | (temp2 << 0);
 	return cw;
 }
-/*
-static unsigned int GetDataWordsFromPacket2(unsigned int data[], unsigned int n_datawords, unsigned int data_longs[])
-{
-	unsigned int n_datalongs = n_datawords / 2;
-	unsigned int remainder = n_datawords - n_datalongs*2;
 
-	int i;
-	for (i=0; i<n_datalongs; i++)
-	{
-		unsigned int temp1, temp2, temp3, temp4;
-
-		temp1 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (4*i + 0) - 1];
-		temp2 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (4*i + 1) - 1];
-		temp3 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (4*i + 2) - 1];
-		temp4 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (4*i + 3) - 1];
-
-		unsigned int d = (temp1 << (3*8)) | (temp2 << (2*8)) | (temp3 << (1*8)) | (temp4 << (0*8));
-		data_longs[i] = d;
-	}
-
-	for (i=0; i<remainder; i++)
-	{
-		unsigned int temp1, temp2, temp3, temp4;
-
-		temp1 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (n_datalongs*4) + (4*i + 0) - 1];
-		temp2 = data[(HEAD_SIZE+PACKETLENGTH_SIZE+PACKET_ID_SIZE + bshv_byte_size + commandword_byte_size + 1) + (n_datalongs*4) + (4*i + 1) - 1];
-		temp3 = 0;
-		temp4 = 0;
-
-		unsigned int d = (temp1 << (3*8)) | (temp2 << (2*8)) | (temp3 << (1*8)) | (temp4 << (0*8));
-		data_longs[n_datalongs + remainder - 1] = d;
-	}
-
-	if (remainder != 0)
-	{
-		return (n_datalongs + 1);
-	}
-	else
-	{
-		return (n_datalongs);
-	}
-
-}
-*/
 static void GetDataWordsFromPacket(unsigned int data[], unsigned int n_data_shorts, unsigned short data_shorts[])
 {
 	int i;
@@ -160,7 +117,7 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	}
 
 	// 2. Декодировать значение БШВ и проверить граничные значения БШВ
-	Bshv packet_bshv;
+	BshvExtention packet_bshv;
 	GetBshvFromPacket(data, &packet_bshv);
 	int bshv_result = ValidateBshvBoundaries(&packet_bshv);
 	if(bshv_result == EXIT_FAILURE)
@@ -235,7 +192,7 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	}
 
 	// 2. Декодировать значение БШВ и проверить граничные значения БШВ
-	Bshv packet_bshv;
+	BshvExtention packet_bshv;
 	GetBshvFromPacket(data, &packet_bshv);
 	int bshv_result = ValidateBshvBoundaries(&packet_bshv);
 	if(bshv_result == EXIT_FAILURE)
