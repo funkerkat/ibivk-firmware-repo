@@ -11,6 +11,7 @@
 
 typedef struct NodeBshv
 {
+	struct NodeBshv* prev;
 	Bshv myBshv;
 	signed int ptr;
 	struct NodeBshv* next;

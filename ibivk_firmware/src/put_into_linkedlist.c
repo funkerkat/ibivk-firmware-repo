@@ -20,12 +20,34 @@ NodeBshv* GetBshvNode(NodeBshv** p_start, Bshv* b);
 
 int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 {
-	Bshv thisBshv = b->myBshv;
+	Bshv b1 = b->myBshv;
+	b1.second = 15;
+
+	Bshv b2 = b->myBshv;
+	b2.second = 17;
+
+	Bshv b3 = b->myBshv;
+	b3.second = 16;
+
+	/*
+	int n;
 
 	// Поиск соответствующей записи БШВ или созданиe новой
-	NodeBshv* myNodeBshv = AddNodeBshvItem(&node_bshv_start, &thisBshv);
+	NodeBshv* myNodeBshv1 = AddNodeBshvItem(&node_bshv_start, &b1);
+	n = CountItemsInListBshv(&node_bshv_start);
 
-	int n = CountItemsInListBshv(&node_bshv_start);
+
+	NodeBshv* myNodeBshv2 = AddNodeBshvItem(&node_bshv_start, &b2);
+	n = CountItemsInListBshv(&node_bshv_start);
+
+
+	NodeBshv* myNodeBshv3 = AddNodeBshvItem(&node_bshv_start, &b3);
+	n = CountItemsInListBshv(&node_bshv_start);
+
+
+	RemoveItemFromNodeBshvList(myNodeBshv3);
+*/
+
 
 	/*
 	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));

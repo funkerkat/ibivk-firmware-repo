@@ -53,6 +53,7 @@ static void CreateLinkedList(NodeBshv** p_start)
     first_item->myBshv.second = -1;
     // установить указатель на след. элемент в NULL, потом переставить на last_item
     first_item->next = NULL;
+    first_item->prev = NULL;
     // устанавливаем указатель первого элемента списка на созданный элемент
     *p_start = first_item;
 
@@ -66,11 +67,12 @@ static void CreateLinkedList(NodeBshv** p_start)
     last_item->myBshv.second = 0x7FFFFFFF;
     // установить указатель на след. элемент в NULL, т. к. элемент последний в списке
     last_item->next = NULL;
+    last_item->prev = first_item;
 
     // 3. связываем элементы first и last
     first_item->next = last_item;
 }
-
+/*
 static void InsertNodeBshv(NodeBshv *prev_item, NodeBshv *this_item)
 {
     // устанавливаем указатель у нового элемента на след. элемент
@@ -79,7 +81,32 @@ static void InsertNodeBshv(NodeBshv *prev_item, NodeBshv *this_item)
     // устанавливаем указатель предыдущего элемента на новый (текущий) элемент
     prev_item->next = this_item;
 }
+*/
 
+static void InsertNodeBshvNew(NodeBshv *this_item, NodeBshv *new_item)
+{
+
+    // устанавливаем указатели у нового элемента на следующий и предшествующий элементы
+	new_item->prev = this_item->prev;
+
+	NodeBshv* prev_item = this_item->prev;
+	new_item->next = prev_item->next;
+
+    // устанавливаем указатель у предшествующего элемента на новый элемент
+	prev_item->next = new_item;
+
+    // устанавливаем указатель у следующего элемента на новый элемент
+	this_item->prev = new_item;
+
+// ---------------------------------------------------------------------------
+    // устанавливаем указатель у нового элемента на след. элемент
+    //this_item->next = prev_item->next;
+
+    // устанавливаем указатель предыдущего элемента на новый (текущий) элемент
+    //prev_item->next = this_item;
+}
+
+/*
 static NodeBshv* CreateNodeBshv(Bshv* b)
 {
 	NodeBshv* new_item = (NodeBshv*) malloc(sizeof(NodeBshv));
@@ -88,11 +115,22 @@ static NodeBshv* CreateNodeBshv(Bshv* b)
 	new_item->next = NULL;
 	return new_item;
 }
+*/
+
+static NodeBshv* CreateNodeBshv(Bshv* b)
+{
+	NodeBshv* new_item = (NodeBshv*) malloc(sizeof(NodeBshv));
+	new_item->myBshv = *b;
+	new_item->ptr = NULL;
+	new_item->next = NULL;
+	new_item->prev = NULL;
+	return new_item;
+}
 
 NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 {
 	NodeBshv *start = *p_start;	// указатель на первый элемент списка
-	NodeBshv *prev = NULL;		// указатель на элемент списка, предшествующий элементу, по которому срабатывает условие сравнения
+//	NodeBshv *prev = NULL;		// указатель на элемент списка, предшествующий элементу, по которому срабатывает условие сравнения
 	NodeBshv *this = start;		// указатель на текущий элемент списка
 	result_type res = NotUsed;
 
@@ -119,7 +157,7 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 			case NewItemIsLess:
 			{
 				NodeBshv* new_item = CreateNodeBshv(b);
-				InsertNodeBshv(prev, new_item);		// Вставляем элемент в середину списка
+				InsertNodeBshvNew(this, new_item);		// Вставляем элемент в середину списка
 				return new_item;
 			}
 
@@ -127,11 +165,28 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 		}
 
 		// место для вставки пока не нашлось, ищем дальше:
-		prev = this;
+		//prev = this;
 		this = (NodeBshv*)this->next;
 	}
 
 	return NULL;
+}
+
+void RemoveItemFromNodeBshvList(NodeBshv* this_item)
+{
+	// найти предшествующий и следующий элемент списка
+	NodeBshv* prev_item = this_item->prev;
+	NodeBshv* next_item = this_item->next;
+
+	// исправить указатели предшествующего элемента
+	prev_item->next = next_item;
+
+	// исправить указатели следующего элемента
+	next_item->prev = prev_item;
+
+	// удалить текущий элемент
+	free(this_item);
+	this_item = NULL;
 }
 
 int CountItemsInListBshv(NodeBshv** p_start)
