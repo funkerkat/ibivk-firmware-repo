@@ -8,13 +8,13 @@
 #include <stdlib.h>
 #include "node.h"
 
-typedef enum {NotUsed, NewItemIsLess, Equal, NewItemIsGreater} result_type;
+typedef enum {NotUsed, FirstValueIsGreater, Equal, FirstValueIsLess} result_type;
 
 static result_type Compare(Node* old_item, Node* new_item)
 {
 	if ( (old_item->value) < (new_item->value) )
 	{
-		return NewItemIsGreater; // пропускаем... ищем дальше
+		return FirstValueIsLess; // пропускаем... ищем дальше
 	}
 	else if( (old_item->value) == (new_item->value) )
 	{
@@ -22,7 +22,7 @@ static result_type Compare(Node* old_item, Node* new_item)
 	}
 	else
 	{
-		return NewItemIsLess; // найдет первый старший элемент, новый узел должен быть вставлен в список перед этим элементом.
+		return FirstValueIsGreater; // найдет первый старший элемент, новый узел должен быть вставлен в список перед этим элементом.
 	}
 }
 
@@ -90,7 +90,7 @@ static int AddItemToLinkedList(Node** p_start, Node* new_item)
 
 		switch(res)
 		{
-			case NewItemIsGreater:
+			case FirstValueIsLess:
 				;	// continue searching
 				break;
 
@@ -98,7 +98,7 @@ static int AddItemToLinkedList(Node** p_start, Node* new_item)
 				;	// replace
 				break;
 
-			case NewItemIsLess:
+			case FirstValueIsGreater:
 				InsertNode(prev, new_item);		// ¬ставл€ем элемент в середину списка
 				return EXIT_SUCCESS;
 

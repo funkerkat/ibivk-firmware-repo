@@ -8,13 +8,13 @@
 #include <stdlib.h>
 #include "list_microseconds.h"
 
-typedef enum {NotUsed, NewItemIsLess, Equal, NewItemIsGreater} result_type;
+typedef enum {NotUsed, FirstValueIsGreater, Equal, FirstValueIsLess} result_type;
 
 static result_type Compare(signed int old_mcs, signed int new_mcs)
 {
 	// Сравнить микросекунды
-	if ( new_mcs > old_mcs ) { return NewItemIsGreater; }
-	if ( new_mcs < old_mcs ) { return NewItemIsLess; }
+	if ( new_mcs > old_mcs ) { return FirstValueIsLess; }
+	if ( new_mcs < old_mcs ) { return FirstValueIsGreater; }
 
 	// Если не произошел выход из функции по любому из условий выше, оба значения равны:
 	return Equal;
@@ -82,7 +82,7 @@ int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, sign
 
 		switch(res)
 		{
-			case NewItemIsGreater:
+			case FirstValueIsLess:
 			{
 				;	// continue searching
 				break;
@@ -96,7 +96,7 @@ int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, sign
 				return EXIT_SUCCESS;
 			}
 
-			case NewItemIsLess:
+			case FirstValueIsGreater:
 			{
 				NodeMicrosecond* new_item = CreateNodeMicrosecond(mcs, entry);
 				InsertNodeMicrosecond(this, new_item);		// Вставляем элемент в середину списка

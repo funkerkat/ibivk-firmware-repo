@@ -8,35 +8,7 @@
 #include <stdlib.h>
 #include "Node_bshv.h"
 
-typedef enum {NotUsed, NewItemIsLess, Equal, NewItemIsGreater} result_type;
-
 NodeBshv* node_bshv_start;
-
-static result_type Compare(Bshv* old_bshv, Bshv* new_bshv)
-{
-	// Сравнить четырехлетия
-	if ( (new_bshv->fouryears) > (old_bshv->fouryears) ) { return NewItemIsGreater; }
-	if ( (new_bshv->fouryears) < (old_bshv->fouryears) ) { return NewItemIsLess; }
-
-	// Сравнить сутки
-	if ( (new_bshv->day) > (old_bshv->day) ) { return NewItemIsGreater; }
-	if ( (new_bshv->day) < (old_bshv->day) ) { return NewItemIsLess; }
-
-	// Сравнить час
-	if ( (new_bshv->hour) > (old_bshv->hour) ) { return NewItemIsGreater; }
-	if ( (new_bshv->hour) < (old_bshv->hour) ) { return NewItemIsLess; }
-
-	// Сравнить минуту
-	if ( (new_bshv->minute) > (old_bshv->minute) ) { return NewItemIsGreater; }
-	if ( (new_bshv->minute) < (old_bshv->minute) ) { return NewItemIsLess; }
-
-	// Сравнить секунду
-	if ( (new_bshv->second) > (old_bshv->second) ) { return NewItemIsGreater; }
-	if ( (new_bshv->second) < (old_bshv->second) ) { return NewItemIsLess; }
-
-	// Если не произошел выход из функции по любому из условий выше, оба значения равны:
-	return Equal;
-}
 
 static void CreateLinkedList(NodeBshv** p_start)
 {
@@ -130,11 +102,11 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 	// поиск по всем элементам списка, кроме сторожевых
 	while(this)
 	{
-		res = Compare(&(this->myBshv), b);
+		res = CompareBshv(&(this->myBshv), b);
 
 		switch(res)
 		{
-			case NewItemIsGreater:
+			case FirstValueIsLess:
 			{
 				;	// continue searching
 				break;
@@ -145,7 +117,7 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 				return this;
 			}
 
-			case NewItemIsLess:
+			case FirstValueIsGreater:
 			{
 				NodeBshv* new_item = CreateNodeBshv(b);
 				InsertNodeBshv(this, new_item);		// Вставляем элемент в середину списка

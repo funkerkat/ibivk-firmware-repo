@@ -12,11 +12,59 @@ Bshv system_bshv;
 
 void InitSystemBshv()
 {
-	system_bshv.fouryears = 0;
-	system_bshv.day = 0;
-	system_bshv.hour = 0;
-	system_bshv.minute = 0;
-	system_bshv.second = 0;
+	system_bshv.fouryears = 1;
+	system_bshv.day = 15;
+	system_bshv.hour = 23;
+	system_bshv.minute = 30;
+	system_bshv.second = 15;
+}
+
+result_type CompareBshv(Bshv* first_value, Bshv* second_value)
+{
+	// Сравнить четырехлетия
+	/*
+	if ( (second_value->fouryears) > (first_value->fouryears) ) { return FirstValueIsLess; }
+	if ( (second_value->fouryears) < (first_value->fouryears) ) { return FirstValueIsGreater; }
+
+	// Сравнить сутки
+	if ( (second_value->day) > (first_value->day) ) { return FirstValueIsLess; }
+	if ( (second_value->day) < (first_value->day) ) { return FirstValueIsGreater; }
+
+	// Сравнить час
+	if ( (second_value->hour) > (first_value->hour) ) { return FirstValueIsLess; }
+	if ( (second_value->hour) < (first_value->hour) ) { return FirstValueIsGreater; }
+
+	// Сравнить минуту
+	if ( (second_value->minute) > (first_value->minute) ) { return FirstValueIsLess; }
+	if ( (second_value->minute) < (first_value->minute) ) { return FirstValueIsGreater; }
+
+	// Сравнить секунду
+	if ( (second_value->second) > (first_value->second) ) { return FirstValueIsLess; }
+	if ( (second_value->second) < (first_value->second) ) { return FirstValueIsGreater; }
+	*/
+
+	// Сравнить четырехлетия
+	if ( (first_value->fouryears) < (second_value->fouryears) ) { return FirstValueIsLess; }
+	if ( (first_value->fouryears) > (second_value->fouryears) ) { return FirstValueIsGreater; }
+
+	// Сравнить сутки
+	if ( (first_value->day) < (second_value->day) ) { return FirstValueIsLess; }
+	if ( (first_value->day) > (second_value->day) ) { return FirstValueIsGreater; }
+
+	// Сравнить час
+	if ( (first_value->hour) < (second_value->hour) ) { return FirstValueIsLess; }
+	if ( (first_value->hour) > (second_value->hour) ) { return FirstValueIsGreater; }
+
+	// Сравнить минуту
+	if ( (first_value->minute) < (second_value->minute) ) { return FirstValueIsLess; }
+	if ( (first_value->minute) > (second_value->minute) ) { return FirstValueIsGreater; }
+
+	// Сравнить секунду
+	if ( (first_value->second) < (second_value->second) ) { return FirstValueIsLess; }
+	if ( (first_value->second) > (second_value->second) ) { return FirstValueIsGreater; }
+
+	// Если не произошел выход из функции по любому из условий выше, оба значения равны:
+	return Equal;
 }
 
 int CompareWithSystemBshv(Bshv* system_bshv, Bshv* local_bshv)

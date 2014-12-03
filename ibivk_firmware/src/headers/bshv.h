@@ -8,6 +8,8 @@
 #ifndef BSHV_H_
 #define BSHV_H_
 
+typedef enum {NotUsed, FirstValueIsGreater, Equal, FirstValueIsLess} result_type;
+
 typedef struct _Bshv
 {
 	signed int fouryears;
@@ -17,18 +19,6 @@ typedef struct _Bshv
 	signed int second;
 }Bshv;
 
-/*
-typedef struct _BshvExtention
-{
-	signed int fouryears;
-	signed int day;
-	signed int hour;
-	signed int minute;
-	signed int second;
-	signed int microsecond;
-}BshvExtention;
-*/
-
 typedef struct _BshvExtention
 {
 	Bshv myBshv;
@@ -37,7 +27,8 @@ typedef struct _BshvExtention
 
 extern Bshv system_bshv;
 
-int CompareWithSystemBshv(Bshv*, Bshv*);
+int CompareWithSystemBshv(Bshv*, Bshv*);		// удалить потом
+result_type CompareBshv(Bshv* old_bshv, Bshv* new_bshv);
 
 enum BshvBoundary
  {

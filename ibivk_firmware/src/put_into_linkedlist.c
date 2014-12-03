@@ -90,6 +90,7 @@ int t  = 1; t++;
 int LoadPacketF2(BshvExtention* b, unsigned int cw)
 {
 
+	HertzHandler();
 
 	/*
 	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));
