@@ -51,6 +51,7 @@ static void CreateLinkedList(NodeBshv** p_start)
     first_item->myBshv.hour = -1;
     first_item->myBshv.minute = -1;
     first_item->myBshv.second = -1;
+    first_item->ptr = NULL;
     // установить указатель на след. элемент в NULL, потом переставить на last_item
     first_item->next = NULL;
     first_item->prev = NULL;
@@ -65,6 +66,7 @@ static void CreateLinkedList(NodeBshv** p_start)
     last_item->myBshv.hour = 0x7FFFFFFF;
     last_item->myBshv.minute = 0x7FFFFFFF;
     last_item->myBshv.second = 0x7FFFFFFF;
+    last_item->ptr = NULL;
     // установить указатель на след. элемент в NULL, т. к. элемент последний в списке
     last_item->next = NULL;
     last_item->prev = first_item;
@@ -72,20 +74,9 @@ static void CreateLinkedList(NodeBshv** p_start)
     // 3. связываем элементы first и last
     first_item->next = last_item;
 }
-/*
-static void InsertNodeBshv(NodeBshv *prev_item, NodeBshv *this_item)
+
+static void InsertNodeBshv(NodeBshv *this_item, NodeBshv *new_item)
 {
-    // устанавливаем указатель у нового элемента на след. элемент
-    this_item->next = prev_item->next;
-
-    // устанавливаем указатель предыдущего элемента на новый (текущий) элемент
-    prev_item->next = this_item;
-}
-*/
-
-static void InsertNodeBshvNew(NodeBshv *this_item, NodeBshv *new_item)
-{
-
     // устанавливаем указатели у нового элемента на следующий и предшествующий элементы
 	new_item->prev = this_item->prev;
 
@@ -97,25 +88,8 @@ static void InsertNodeBshvNew(NodeBshv *this_item, NodeBshv *new_item)
 
     // устанавливаем указатель у следующего элемента на новый элемент
 	this_item->prev = new_item;
-
-// ---------------------------------------------------------------------------
-    // устанавливаем указатель у нового элемента на след. элемент
-    //this_item->next = prev_item->next;
-
-    // устанавливаем указатель предыдущего элемента на новый (текущий) элемент
-    //prev_item->next = this_item;
 }
 
-/*
-static NodeBshv* CreateNodeBshv(Bshv* b)
-{
-	NodeBshv* new_item = (NodeBshv*) malloc(sizeof(NodeBshv));
-	new_item->myBshv = *b;
-	new_item->ptr = NULL;
-	new_item->next = NULL;
-	return new_item;
-}
-*/
 
 static NodeBshv* CreateNodeBshv(Bshv* b)
 {
@@ -125,6 +99,23 @@ static NodeBshv* CreateNodeBshv(Bshv* b)
 	new_item->next = NULL;
 	new_item->prev = NULL;
 	return new_item;
+}
+
+void RemoveItemFromNodeBshvList(NodeBshv* this_item)
+{
+	// найти предшествующий и следующий элемент списка
+	NodeBshv* prev_item = this_item->prev;
+	NodeBshv* next_item = this_item->next;
+
+	// исправить указатели предшествующего элемента
+	prev_item->next = next_item;
+
+	// исправить указатели следующего элемента
+	next_item->prev = prev_item;
+
+	// удалить текущий элемент
+	free(this_item);
+	this_item = NULL;
 }
 
 NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
@@ -157,7 +148,7 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 			case NewItemIsLess:
 			{
 				NodeBshv* new_item = CreateNodeBshv(b);
-				InsertNodeBshvNew(this, new_item);		// Вставляем элемент в середину списка
+				InsertNodeBshv(this, new_item);		// Вставляем элемент в середину списка
 				return new_item;
 			}
 
@@ -170,23 +161,6 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 	}
 
 	return NULL;
-}
-
-void RemoveItemFromNodeBshvList(NodeBshv* this_item)
-{
-	// найти предшествующий и следующий элемент списка
-	NodeBshv* prev_item = this_item->prev;
-	NodeBshv* next_item = this_item->next;
-
-	// исправить указатели предшествующего элемента
-	prev_item->next = next_item;
-
-	// исправить указатели следующего элемента
-	next_item->prev = prev_item;
-
-	// удалить текущий элемент
-	free(this_item);
-	this_item = NULL;
 }
 
 int CountItemsInListBshv(NodeBshv** p_start)

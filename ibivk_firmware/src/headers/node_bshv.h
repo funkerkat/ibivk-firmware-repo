@@ -5,6 +5,7 @@
  *      Author: Ludmila
  */
 #include "bshv.h"
+#include "list_microseconds.h"
 
 #ifndef NODE_BSHV_H_
 #define NODE_BSHV_H_
@@ -13,7 +14,7 @@ typedef struct NodeBshv
 {
 	struct NodeBshv* prev;
 	Bshv myBshv;
-	signed int ptr;
+	NodeMicrosecond* ptr;
 	struct NodeBshv* next;
 }NodeBshv;
 

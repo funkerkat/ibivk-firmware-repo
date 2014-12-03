@@ -14,12 +14,36 @@
 #include "node_bshv.h"
 #include "bshv.h"
 
-int AddNodeBshvItem(NodeBshv** p_start, NodeBshv* new_item);
-NodeBshv* GetBshvNode(NodeBshv** p_start, Bshv* b);
+#include "list_microseconds.h"
 
+int AddNodeBshvItem(NodeBshv** p_start, NodeBshv* new_item);
+int CountItemsInListBshv(NodeBshv** p_start);
 
 int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 {
+	// выделить память в куче под данные МКИО
+	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));
+	Load1553MessageF1(p_entry, cw, dw);
+
+	int n;
+	// Поиск соответствующей записи БШВ или созданиe новой
+	NodeBshv* thisNodeBshv = AddNodeBshvItem(&node_bshv_start, &(b->myBshv));
+	n = CountItemsInListBshv(&node_bshv_start);
+
+
+	if (thisNodeBshv->ptr == NULL) { CreateListMicrosecond(&(thisNodeBshv->ptr)); }
+	AddNodeMicrosecondItem(&(thisNodeBshv->ptr), p_entry, b->microsecond);
+
+
+	n = CountItemsInListMicrosecond(&(thisNodeBshv->ptr));
+
+
+
+
+
+int t  = 1; t++;
+
+	/*
 	Bshv b1 = b->myBshv;
 	b1.second = 15;
 
@@ -29,7 +53,7 @@ int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 	Bshv b3 = b->myBshv;
 	b3.second = 16;
 
-	/*
+
 	int n;
 
 	// Поиск соответствующей записи БШВ или созданиe новой
@@ -61,8 +85,12 @@ int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 	return EXIT_SUCCESS;
 }
 
+
+
 int LoadPacketF2(BshvExtention* b, unsigned int cw)
 {
+
+
 	/*
 	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));
 
