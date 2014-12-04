@@ -57,6 +57,7 @@ void Load1553MessageF1(EntryCore1553* entry, unsigned short cw, unsigned short d
 
 	// ¬ычислить из командного слова количество слов данных
 	unsigned int n_data_words = cw & 0x1F;
+	if (n_data_words == 0) { n_data_words = 32; }
 
 	// «аложить данные в пам€ть
 	int i;
@@ -152,7 +153,7 @@ void Test1553Core()
 	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG08_COMMAND_BLOCK_POINTER)) 	= (p_cmd - p_cmd_masked)/2;
 */
 
-	START_EXECUTION();
+	CORE1553_START_EXECUTION();
 
 
 

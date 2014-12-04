@@ -6,13 +6,30 @@
  */
 
 #include "xSystem.h"
+#include "xMil1553BC.h"
 #include "bshv.h"
 #include "node_bshv.h"
 
 
-void Execute1553()
+static void Execute1553(NodeBshv* this_bshv)
 {
+	NodeMicrosecond* this_microsecond = this_bshv->ptr;
 
+	// пропустить сторожевой элемент в списке микросекунд
+	this_microsecond = this_microsecond->next;
+
+	while(this_microsecond->next != NULL)
+	{
+		// подождать если ядро занято (идет передача)
+		CORE1553_EXECUTION_DELAY();
+
+		// выдать сообщение МКИО
+		CORE1553_RELOAD(this_microsecond->core1553_entry->reg_leon, this_microsecond->core1553_entry->reg_core1553);
+		CORE1553_START_EXECUTION();
+
+		// перейти к следующему элементу в списке микросекунд
+		this_microsecond = this_microsecond->next;
+	}
 
 }
 
@@ -33,7 +50,7 @@ void HertzHandler()
 		if (res == Equal)
 		{
 			// выдача сообщений МКИО, запланированных на текущую секунду
-			Execute1553();
+			Execute1553(this);
 			break;
 		}
 		else if(res == FirstValueIsLess)
@@ -63,16 +80,5 @@ void HertzHandler()
 	}
 
 
-
-
-
-	// Поиск по списку, содержащему отсчеты БШВ
-	/*
-	NodeBshv* this = node_bshv_start;		// указатель на текущий элемент списка
-	while(this)
-	{
-		this = this->next;
-	}
-*/
 
 }

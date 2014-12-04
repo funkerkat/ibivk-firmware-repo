@@ -97,7 +97,9 @@
 }
 
 
-#define START_EXECUTION()																											\
+#define CORE1553_START_EXECUTION()																									\
 {																																	\
 	*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG00_CONTROL)) = *((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG00_CONTROL)) | (1<<15);	\
 }
+
+#define CORE1553_EXECUTION_DELAY() { while((*((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG00_CONTROL))) & 0x00008000) { ; } }

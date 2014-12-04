@@ -155,18 +155,11 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	}
 
 	// 4. Декодировать слова данных
-	/*
-	unsigned int data_longs[16];
-	unsigned int n_data_longs = GetDataWordsFromPacket(data, n_datawords, data_longs);
-	*/
 	unsigned short data_shorts[32];
 	int i; for(i=0; i<32; i++) { data_shorts[i] = 0; }
 	GetDataWordsFromPacket(data, n_datawords, data_shorts);
 
 	// 5. Загрузить в память ИБИВК
-	/*
-	int load_result = LoadPacketF1(&packet_bshv, cw, data_longs, n_data_longs);
-	*/
 	int load_result = LoadPacketF1(&packet_bshv, cw, data_shorts);
 	if(load_result == EXIT_SUCCESS)
 	{

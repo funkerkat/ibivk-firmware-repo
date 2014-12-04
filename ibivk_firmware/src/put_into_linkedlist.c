@@ -10,7 +10,6 @@
 #include "bshv.h"
 #include "bus_controller.h"
 #include "xMil1553BC.h"
-#include "xMil1553BC.h"
 #include "node_bshv.h"
 #include "bshv.h"
 
