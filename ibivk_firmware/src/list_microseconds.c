@@ -20,6 +20,37 @@ static result_type Compare(signed int old_mcs, signed int new_mcs)
 	return Equal;
 }
 
+
+static void SetTimerValues(NodeMicrosecond *this_item)
+{
+	NodeMicrosecond* prev_item = this_item->prev;
+	NodeMicrosecond* next_item = this_item->next;
+
+
+	// Если текущий элемент -- первый в списке (после сторожевого):
+	if(prev_item->prev == NULL)
+	{
+		prev_item->timer_value = this_item->microsecond;
+	}
+	else
+	{
+		prev_item->timer_value = this_item->microsecond - prev_item->microsecond;
+	}
+
+
+	// Если текущий элемент -- последний в списке (не считая сторожевого):
+	if (next_item->next == NULL)
+	{
+		this_item->timer_value = 0;
+	}
+	else
+	{
+		this_item->timer_value = next_item->microsecond - this_item->microsecond;
+	}
+
+
+}
+
 static void InsertNodeMicrosecond(NodeMicrosecond *this_item, NodeMicrosecond *new_item)
 {
     // устанавливаем указатели у нового элемента на следующий и предшествующий элементы
@@ -33,6 +64,10 @@ static void InsertNodeMicrosecond(NodeMicrosecond *this_item, NodeMicrosecond *n
 
     // устанавливаем указатель у следующего элемента на новый элемент
 	this_item->prev = new_item;
+
+	// пересчитаем значение таймера
+	SetTimerValues(new_item);
+
 }
 
 static NodeMicrosecond* CreateNodeMicrosecond(signed int mcs, EntryCore1553* entry)
@@ -140,7 +175,7 @@ int CountItemsInListMicrosecond(NodeMicrosecond** p_start)
 		n++;
 		this = this->next;
 	}
-	if (n<2) { return -1; }	// Ошибка! В списке должно быть минимум два сторожевых элемента.
+	if (n<2) { return -1; }	// Ошибка! В списке должно быть минимум два (сторожевых) элемента.
 	return (n-2);			// n - кол-во элементов в списке, не считая сторожевых эл-тов
 }
 
@@ -153,6 +188,7 @@ void CreateListMicrosecond(NodeMicrosecond** p_start)
 	// выделить память и присвоить значения
 	NodeMicrosecond* first_item = (NodeMicrosecond*) malloc(sizeof(NodeMicrosecond));
     first_item->microsecond = NODE_MICROSECOND_MIN;
+    first_item->timer_value = 0;
 
     // установить указатель на след. элемент в NULL, потом переставить на last_item
     first_item->next = NULL;
@@ -164,6 +200,7 @@ void CreateListMicrosecond(NodeMicrosecond** p_start)
 	// выделить память и присвоить значения
     NodeMicrosecond* last_item = (NodeMicrosecond*) malloc(sizeof(NodeMicrosecond));
     last_item->microsecond = NODE_MICROSECOND_MAX;
+    last_item->timer_value = 0;
 
     // установить указатель на след. элемент в NULL, т. к. элемент последний в списке
     last_item->next = NULL;

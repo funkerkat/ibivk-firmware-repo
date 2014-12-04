@@ -25,18 +25,14 @@ int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));
 	Load1553MessageF1(p_entry, cw, dw);
 
-	int n;
 	// Поиск соответствующей записи БШВ или созданиe новой
 	NodeBshv* thisNodeBshv = AddNodeBshvItem(&node_bshv_start, &(b->myBshv));
-	n = CountItemsInListBshv(&node_bshv_start);
 
-
+	// Если не существует списка микросекунд, привязанного к даннному значению БШВ, то создать его:
 	if (thisNodeBshv->ptr == NULL) { CreateListMicrosecond(&(thisNodeBshv->ptr)); }
+
+	// Добавить текущую микросекунду в список микросекунд
 	AddNodeMicrosecondItem(&(thisNodeBshv->ptr), p_entry, b->microsecond);
-
-
-	n = CountItemsInListMicrosecond(&(thisNodeBshv->ptr));
-
 
 
 
