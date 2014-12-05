@@ -56,12 +56,15 @@ void Handler_irq_6()
 
 void Handler_irq_7()
 {
+
+	ExecuteCore1553();
+
 	// Clear pending bit
 ///	*((int*)(TIMER_BASE_ADDRESS + REG_TIMER2_CONTROL)) 	= *((int*)(TIMER_BASE_ADDRESS + REG_TIMER2_CONTROL)) & (~(1 << 4));
 
 	// TIMER 2
-	GRGPIO_TOGGLE(1);
-	GRGPIO_TOGGLE(1);
+	//GRGPIO_TOGGLE(1);
+	//GRGPIO_TOGGLE(1);
 }
 
 void Handler_irq_8()

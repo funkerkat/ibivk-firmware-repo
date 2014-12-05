@@ -25,6 +25,8 @@ enum WatchdogNodeMicrosecondsValues
 	 NODE_MICROSECOND_MAX 	= 0x7FFFFFFF,
  };
 
+extern NodeMicrosecond* global_microsecond;
+
 void CreateListMicrosecond(NodeMicrosecond** p_start);
 void DeleteListMicrosecond(NodeMicrosecond** p_start);
 int CountItemsInListMicrosecond(NodeMicrosecond** p_start);

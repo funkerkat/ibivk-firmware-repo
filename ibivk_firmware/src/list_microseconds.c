@@ -10,6 +10,8 @@
 
 typedef enum {NotUsed, FirstValueIsGreater, Equal, FirstValueIsLess} result_type;
 
+NodeMicrosecond* global_microsecond;
+
 static result_type Compare(signed int old_mcs, signed int new_mcs)
 {
 	// Сравнить микросекунды

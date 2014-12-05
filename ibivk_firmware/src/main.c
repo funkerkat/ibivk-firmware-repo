@@ -13,6 +13,7 @@
 
 #include "xIrqmp.h"
 #include "xUart.h"
+#include "xTimer.h"
 #include "xMil1553BC.h"
 
 void InitInterruptHandlers(void);
@@ -31,9 +32,8 @@ int main(void)
 	InitSystemBshv();
 
 	CORE1553_INIT();
+	TIMER_INIT();
 	UART_INIT(115200);
-
-
 	IRQMP_ENABLE();
 
 

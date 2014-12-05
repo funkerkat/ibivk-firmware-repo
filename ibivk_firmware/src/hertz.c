@@ -7,10 +7,12 @@
 
 #include "xSystem.h"
 #include "xMil1553BC.h"
+#include "xTimer.h"
 #include "bshv.h"
 #include "node_bshv.h"
+#include "list_microseconds.h"
 
-
+/*
 static void Execute1553(NodeBshv* this_bshv)
 {
 	NodeMicrosecond* this_microsecond = this_bshv->ptr;
@@ -32,6 +34,7 @@ static void Execute1553(NodeBshv* this_bshv)
 	}
 
 }
+*/
 
 void HertzHandler()
 {
@@ -41,16 +44,17 @@ void HertzHandler()
 	if (this==NULL){ return; }			// аварийный выход
 	this = this->next;					// пропустить первый (сторожевой) элемент списка
 
-
-
 	while(this)
 	{
 		result_type res = CompareBshv(&(this->myBshv), &system_bshv);
 
 		if (res == Equal)
 		{
-			// выдача сообщений МКИО, запланированных на текущую секунду
-			Execute1553(this);
+			// Выдача первого сообщения МКИО, запланированного на текущую секунду
+			global_microsecond = this->ptr;
+			TIMER2_START(global_microsecond->timer_value);
+			// Переключить указатель на следующее сообщение
+			global_microsecond = global_microsecond->next;
 			break;
 		}
 		else if(res == FirstValueIsLess)
