@@ -22,6 +22,7 @@ void InitSystemBshv(void);
 void UartSettings(void);
 
 #include "node_bshv.h"
+#include "rx_queue.h"
 
 int main(void)
 {
@@ -36,10 +37,15 @@ int main(void)
 	UART_INIT(115200);
 	IRQMP_ENABLE();
 
+	QUEUE_CLEAN_POINTERS();
+
+//	int temp = *((int*)(0x20000008));
 
 	InitListBshv();
 
 	int n = CountItemsInListBshv(&node_bshv_start);
+
+
 
 	while(1)
 	{

@@ -77,7 +77,6 @@ static NodeMicrosecond* CreateNodeMicrosecond(signed int mcs, EntryCore1553* ent
 	NodeMicrosecond* new_item = (NodeMicrosecond*) malloc(sizeof(NodeMicrosecond));
 	new_item->microsecond = mcs;
 	new_item->core1553_entry = entry;
-	// new_item->timer_value	// пересчитать значение для таймера
 	new_item->next = NULL;
 	new_item->prev = NULL;
 	return new_item;
@@ -102,6 +101,10 @@ void RemoveItemFromListMicrosecond(NodeMicrosecond* this_item)
 	// удалить текущий элемент
 	free(this_item);
 	this_item = NULL;
+
+	// посчитать количество сообщений в списке на текущую микросекунду, если сообщений нет -- удалить микросекунду
+	//unsigned int n =
+
 }
 
 int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, signed int mcs)
