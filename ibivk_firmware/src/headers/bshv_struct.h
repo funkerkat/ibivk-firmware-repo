@@ -5,8 +5,8 @@
  *      Author: Ludmila
  */
 
-#ifndef BSHV_H_
-#define BSHV_H_
+#ifndef BSHV_STRUCT_H_
+#define BSHV_STRUCT_H_
 
 #include "compare.h"
 
@@ -49,4 +49,4 @@ enum BshvBoundary
 // Прототипы функций
 result_type CompareBshv(Bshv* old_bshv, Bshv* new_bshv);
 
-#endif /* BSHV_H_ */
+#endif /* BSHV_STRUCT_H_ */

@@ -1,12 +1,12 @@
 /*
- * bus_controller.h
+ * bus_controller_struct.h
  *
  *  Created on: 28.11.2014
  *      Author: Ludmila
  */
 
-#ifndef BUS_CONTROLLER_H_
-#define BUS_CONTROLLER_H_
+#ifndef BUS_CONTROLLER_STRUCT_H_
+#define BUS_CONTROLLER_STRUCT_H_
 
 typedef struct ControlWordStruct {
 	unsigned int Opcode;
@@ -56,4 +56,4 @@ typedef struct EntryCore1553
 void Load1553MessageF1(EntryCore1553* entry, unsigned short cw, unsigned short data_words[]);
 void Load1553MessageF2(EntryCore1553* entry, unsigned short cw);
 
-#endif /* BUS_CONTROLLER_H_ */
+#endif /* BUS_CONTROLLER_STRUCT_H_ */

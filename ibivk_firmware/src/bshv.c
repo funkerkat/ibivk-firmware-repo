@@ -5,7 +5,10 @@
  *      Author: Ludmila
  */
 
+// библиотеки дл€ работы с периферией
 #include "xSystem.h"
+
+// библиотеки текущего проекта
 #include "bshv_struct.h"
 
 Bshv system_bshv;
@@ -44,20 +47,3 @@ result_type CompareBshv(Bshv* first_value, Bshv* second_value)
 	// ≈сли не произошел выход из функции по любому из условий выше, оба значени€ равны:
 	return Equal;
 }
-/*
-int CompareWithSystemBshv(Bshv* system_bshv, Bshv* local_bshv)
-{
-
-	return EXIT_SUCCESS;
-
-	if (local_bshv->fouryears < system_bshv->fouryears)
-	{
-		return EXIT_SUCCESS;
-		//return EXIT_FAILURE;
-	}
-
-	return EXIT_SUCCESS;
-
-}
-*/
-

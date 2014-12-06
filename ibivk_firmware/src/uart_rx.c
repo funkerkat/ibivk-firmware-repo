@@ -4,17 +4,25 @@
  *  Created on: 23.10.2014
  *      Author: Ludmila
  */
+
+// библиотеки для работы с периферией
 #include "xSystem.h"
+
+// библиотеки текущего проекта
 #include "ibivk_uart_packets.h"
 #include "control_sum.h"
 #include "uart.h"
 
+// прототипы функций
+#include "uart_decode.h"
+#include "uart_tx.h"
+
+
 unsigned int buffer[BUFFER_LENGTH];
 
 
-void BufferClear(ReceiveBufferParams* params )
+static void BufferClear(ReceiveBufferParams* params )
 {
-
 	params->validate_cnt=0;
 	params->buffer_cnt=0;
 
@@ -25,7 +33,7 @@ void BufferClear(ReceiveBufferParams* params )
 	}
 }
 
-void BufferShift(ReceiveBufferParams* params )
+static void BufferShift(ReceiveBufferParams* params )
 {
 	int i;
 	for (i=0; i < (	(params->buffer_cnt)-1); i++)

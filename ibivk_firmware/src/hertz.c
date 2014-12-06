@@ -5,12 +5,15 @@
  *      Author: Ludmila
  */
 
+// библиотеки для работы с периферией
 #include "xSystem.h"
 #include "xMil1553BC.h"
 #include "xTimer.h"
+
+// библиотеки текущего проекта
 #include "nodes.h"
 
-/*
+
 static void Execute1553(NodeBshv* this_bshv)
 {
 	NodeMicrosecond* this_microsecond = this_bshv->ptr;
@@ -32,7 +35,7 @@ static void Execute1553(NodeBshv* this_bshv)
 	}
 
 }
-*/
+
 
 void HertzHandler()
 {
@@ -48,11 +51,14 @@ void HertzHandler()
 
 		if (res == Equal)
 		{
+			//Execute1553(this);
+
 			// Программирование таймера на выдачу первого сообщения МКИО в текущей секунде БШВ
 			global_microsecond = this->ptr;
 			TIMER2_START(global_microsecond->timer_value);
 			// Переключить указатель на следующее сообщение
 			global_microsecond = global_microsecond->next;
+
 			break;
 		}
 		else if(res == FirstValueIsLess)

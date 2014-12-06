@@ -11,6 +11,4 @@
 unsigned int CountControlSum(int data[], unsigned int n);
 unsigned int ControlSum(unsigned int n_start, int data[], unsigned int n);
 
-#define CYCLESHIFTLEFT(x)	(((x << 1) + ((x >> 7)&1)) & 0xFF)
-
 #endif /* CONTROL_SUM_H_ */

@@ -5,7 +5,7 @@
  *      Author: Ludmila
  */
 
-#include "rx_queue.h"
+#include "uart_tx_queue_struct.h"
 
 UartTransmitQueue uart_tx_queue;
 

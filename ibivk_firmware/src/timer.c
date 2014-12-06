@@ -5,19 +5,21 @@
  *      Author: Ludmila
  */
 
+// страндартная библиотека Си
 #include <stdlib.h>
+
+// библиотеки для работы с периферией
 #include "xSystem.h"
 #include "xMil1553BC.h"
 #include "xTimer.h"
-//#include "list_microseconds.h"
-#include "rx_queue.h"
-#include "mil1553.h"
 
+// библиотеки текущего проекта
+#include "uart_tx_queue_struct.h"
+#include "mil1553.h"
 #include "nodes.h"
 
-// Прототипы:
-void RemoveItemFromListMicrosecond(NodeMicrosecond* this_item);
-
+// прототипы функций
+#include "list_microseconds.h"
 
 void ExecuteCore1553()
 {

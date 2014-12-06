@@ -9,7 +9,7 @@
 #define NODES_H_
 
 #include "bshv_struct.h"
-#include "bus_controller.h"
+#include "bus_controller_struct.h"
 
 struct _NodeMicrosecond
 {

@@ -4,11 +4,18 @@
  *  Created on: 27.11.2014
  *      Author: Ludmila
  */
+
+// библиотеки для работы с периферией
 #include "xSystem.h"
-#include "shift_reg.h"
+
+// библиотеки текущего проекта
 #include "ibivk_uart_packets.h"
 #include "bshv_struct.h"
 #include "mil1553.h"
+
+// прототипы функций
+#include "uart_tx.h"
+#include "load_data.h"
 
 static void GetBshvFromPacket(unsigned int data[], BshvExtention* packet_bshv)
 {

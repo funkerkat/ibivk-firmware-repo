@@ -29,6 +29,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\opt\src\newlib-1.13.0\newlib\libc\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;F:\Ludmila\Leon\workspace_ibivk_git\ibivk-firmware-repo\ibivk_firmware\src\headers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;F:\Ludmila\Leon\workspace_ibivk_git\ibivk-firmware-repo\ibivk_firmware\src\prototypes&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\Ludmila\Leon\workspace_ibivk_git\ibivk-firmware-repo\ibivk_firmware\src\xDrivers&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.base.c.compiler.input.c.155411159" superClass="cdt.managedbuild.tool.base.c.compiler.input.c"/>
 								<inputType id="cdt.managedbuild.tool.base.c.compiler.input.asm.2065905441" superClass="cdt.managedbuild.tool.base.c.compiler.input.asm"/>

@@ -25,7 +25,7 @@
 #define DIR_GPIO1				(OUTPUT << 1)
 #define DIR_GPIO2				(OUTPUT << 2)
 #define DIR_GPIO3				(OUTPUT << 3)
-#define DIR_GPIO4				(OUTPUT << 4)
+#define DIR_GPIO4				(INPUT << 4)
 #define DIR_GPIO5				(OUTPUT << 5)
 #define DIR_GPIO6				(OUTPUT << 6)
 #define DIR_GPIO7				(OUTPUT << 7)
@@ -33,10 +33,10 @@
 #define DIR_GPIO9				(OUTPUT << 9)
 #define DIR_GPIO10				(OUTPUT << 10)
 #define DIR_GPIO11				(OUTPUT << 11)
-#define DIR_GPIO12				(INPUT  << 12)
+#define DIR_GPIO12				(OUTPUT  << 12)
 #define DIR_GPIO13				(OUTPUT << 13)
 #define DIR_GPIO14				(OUTPUT << 14)
-#define DIR_GPIO15				(OUTPUT << 15)
+#define DIR_GPIO15				(INPUT << 15)
 #define DIRECTION_GPIO (DIR_GPIO0|DIR_GPIO1|DIR_GPIO2|DIR_GPIO3|DIR_GPIO4|DIR_GPIO5|DIR_GPIO6|DIR_GPIO7|DIR_GPIO8|DIR_GPIO9|DIR_GPIO10|DIR_GPIO11|DIR_GPIO12|DIR_GPIO13|DIR_GPIO14|DIR_GPIO15)
 
 // ----- GRGPIO API -----
@@ -46,7 +46,7 @@
 {																						\
 	*((int*)(GPIO_BASE_ADDRESS + GPIO_REG_GPIO_DIRECTION)) = DIRECTION_GPIO;			\
 	*((int*)(GPIO_BASE_ADDRESS + GPIO_REG_GPIO_IRQ_MASK)) = 0xFFFF;						\
-	*((int*)(GPIO_BASE_ADDRESS + GPIO_REG_GPIO_IRQ_POLARITY)) = 0xFFFF;					\
+	*((int*)(GPIO_BASE_ADDRESS + GPIO_REG_GPIO_IRQ_POLARITY)) = 0xFFEF;					\
 	*((int*)(GPIO_BASE_ADDRESS + GPIO_REG_GPIO_IRQ_EDGE)) = 0xFFFF;						\
 }
 

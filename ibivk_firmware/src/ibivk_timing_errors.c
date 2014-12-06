@@ -7,7 +7,7 @@
  Description : IBIVK project in C, Ansi-style
  ============================================================================
  */
-
+/*
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,34 +17,10 @@
 
 #include "node.h"
 
-void InitIrqmp(void);
-void InitGrgpio(void);
-void InitTimer(unsigned int);
-void TimerStart(unsigned int);
-void AddItem(Node**, int);
-int CountItems(Node**);
-void Mil1553BC_Start(int);
-void InitInterruptHandlers(void);
-void InitUart(void);
-void GpioToggle(int);
-
-
-
 
 
 #define DELTA 12
 
-
-int main_toggle(void)
-{
-	GRGPIO_INIT();
-
-	while(1)
-	{
-		GRGPIO_TOGGLE(3);
-	}
-
-}
 
 int main_timer_errors(void)
 {
@@ -77,57 +53,6 @@ int main_timer_errors(void)
 	return EXIT_SUCCESS;
 
 }
-
-
-int main_timer(void)
-{
-
-    InitInterruptHandlers();
-
-    GRGPIO_INIT();
-    IRQMP_INIT();
-
-
-	while(1)
-	{
-		;
-	}
-
-	return EXIT_SUCCESS;
-
-}
-
-
-int main_testlinkedlist(void) {
-	//puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
-
-	int* adr;
-	adr = (int*)(0x80000200 + 0x40);
-	*adr = 0xffffffff;
-
-	adr = (int*)(0x80000200 + 0x0c);
-	*adr = 1 << 2;
-
-
-	Node* start = NULL;
-	Node** p_start = &start;
-/*
-	AddItem(p_start, 0x41);
-	AddItem(p_start, 0x10);
-	AddItem(p_start, 0x5);
-	AddItem(p_start, 0x100);
-	AddItem(p_start, 0x2);
-	AddItem(p_start, 0x43);
-	AddItem(p_start, 0x99);
-	AddItem(p_start, 0x200);
-
-	int n = CountItems(p_start);
-	n++;
 */
-	while(1)
-	{
-		;
-	}
 
-	return EXIT_SUCCESS;
-}
+

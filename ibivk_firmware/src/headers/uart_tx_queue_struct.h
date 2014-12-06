@@ -5,10 +5,10 @@
  *      Author: Ludmila
  */
 
-#ifndef RX_QUEUE_H_
-#define RX_QUEUE_H_
+#ifndef UART_TX_QUEUE_STRUCT_H_
+#define UART_TX_QUEUE_STRUCT_H_
 
-#include "bus_controller.h"
+#include "bus_controller_struct.h"
 #include "bshv_struct.h"
 
 typedef struct _Data1553
@@ -39,4 +39,4 @@ extern UartTransmitQueue uart_tx_queue;
 
 void UartTransmitQueueStore(Data1553* thisData1553);
 
-#endif /* RX_QUEUE_H_ */
+#endif /* UART_TX_QUEUE_STRUCT_H_ */

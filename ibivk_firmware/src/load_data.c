@@ -5,13 +5,20 @@
  *      Author: Ludmila
  */
 
+// страндартная библиотека Си
 #include <stdlib.h>
+
+// библиотеки для работы с периферией
 #include "xSystem.h"
-#include "bus_controller.h"
 #include "xMil1553BC.h"
+
+// библиотеки текущего проекта
+#include "bus_controller_struct.h"
 #include "bshv_struct.h"
 #include "nodes.h"
 
+// прототипы функций
+#include "list_microseconds.h"
 
 int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 {

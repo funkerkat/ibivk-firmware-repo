@@ -5,7 +5,7 @@
  *      Author: Ludmila
  */
 
-#include "control_sum.h"
+#define CYCLESHIFTLEFT(x)	(((x << 1) + ((x >> 7)&1)) & 0xFF)
 
 unsigned int CountControlSum(int data[], unsigned int n)
 {

@@ -8,22 +8,17 @@
  ============================================================================
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "xIrqmp.h"
-#include "xUart.h"
-#include "xTimer.h"
+// библиотеки для работы с периферией
 #include "xMil1553BC.h"
+#include "xIrqmp.h"
+#include "xTimer.h"
+#include "xUart.h"
+#include "xGrgpio.h"
 
-void InitInterruptHandlers(void);
-void LinkedListDemo(void);
-void InitSystemBshv(void);
-void UartSettings(void);
+// библиотеки текущего проекта
+#include "uart_tx_queue_struct.h"
+#include "list_bshv.h"
 
-//#include "node_bshv.h"
-#include "nodes.h"
-#include "rx_queue.h"
 
 int main(void)
 {
@@ -36,17 +31,14 @@ int main(void)
 	CORE1553_INIT();
 	TIMER_INIT();
 	UART_INIT(115200);
+	GRGPIO_INIT();
 	IRQMP_ENABLE();
 
 	QUEUE_CLEAN_POINTERS();
 
-//	int temp = *((int*)(0x20000008));
-
 	InitListBshv();
 
-	int n = CountItemsInListBshv(&node_bshv_start);
-
-
+	TestFpga();
 
 	while(1)
 	{

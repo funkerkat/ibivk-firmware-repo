@@ -5,11 +5,13 @@
  *      Author: Ludmila
  */
 
+// страндартная библиотека Си
 #include <stdlib.h>
 
-//#include "list_microseconds.h"
-
+// библиотеки текущего проекта
 #include "nodes.h"
+
+// прототипы функций
 #include "list_bshv.h"
 
 enum WatchdogNodeMicrosecondsValues
