@@ -8,9 +8,7 @@
 #include "xSystem.h"
 #include "xMil1553BC.h"
 #include "xTimer.h"
-#include "bshv.h"
-#include "node_bshv.h"
-#include "list_microseconds.h"
+#include "nodes.h"
 
 /*
 static void Execute1553(NodeBshv* this_bshv)

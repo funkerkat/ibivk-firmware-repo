@@ -6,8 +6,9 @@
  */
 
 #include <stdlib.h>
-#include "Node_bshv.h"
+#include "nodes.h"
 
+// глобальная переменная -- точка входа в список секунд БШВ
 NodeBshv* node_bshv_start;
 
 static void CreateLinkedList(NodeBshv** p_start)
@@ -93,7 +94,6 @@ void RemoveItemFromNodeBshvList(NodeBshv* this_item)
 NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 {
 	NodeBshv *start = *p_start;	// указатель на первый элемент списка
-//	NodeBshv *prev = NULL;		// указатель на элемент списка, предшествующий элементу, по которому срабатывает условие сравнения
 	NodeBshv *this = start;		// указатель на текущий элемент списка
 	result_type res = NotUsed;
 
@@ -128,10 +128,8 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 		}
 
 		// место для вставки пока не нашлось, ищем дальше:
-		//prev = this;
 		this = (NodeBshv*)this->next;
 	}
-
 	return NULL;
 }
 
@@ -155,24 +153,3 @@ void InitListBshv()
 	node_bshv_start = NULL;
 	CreateLinkedList(&node_bshv_start);
 }
-/*
-void ListBshvDemo()
-{
-	NodeBshv* start = NULL;
-	CreateLinkedList(&start);
-
-	NodeBshv* new_item1 = CreateItem(0x25);
-	AddNodeBshvItem(&start, new_item1);
-
-	NodeBshv* new_item2 = CreateItem(0x96);
-	AddNodeBshvItem(&start, new_item2);
-
-	NodeBshv* new_item3 = CreateItem(0x48);
-	AddNodeBshvItem(&start, new_item3);
-
-
-	int n = CountItemsInLinkedList(&start);
-
-
-}
-*/

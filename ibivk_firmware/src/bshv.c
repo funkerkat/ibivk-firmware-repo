@@ -6,7 +6,7 @@
  */
 
 #include "xSystem.h"
-#include "bshv.h"
+#include "bshv_struct.h"
 
 Bshv system_bshv;
 
@@ -21,28 +21,6 @@ void InitSystemBshv()
 
 result_type CompareBshv(Bshv* first_value, Bshv* second_value)
 {
-	// Сравнить четырехлетия
-	/*
-	if ( (second_value->fouryears) > (first_value->fouryears) ) { return FirstValueIsLess; }
-	if ( (second_value->fouryears) < (first_value->fouryears) ) { return FirstValueIsGreater; }
-
-	// Сравнить сутки
-	if ( (second_value->day) > (first_value->day) ) { return FirstValueIsLess; }
-	if ( (second_value->day) < (first_value->day) ) { return FirstValueIsGreater; }
-
-	// Сравнить час
-	if ( (second_value->hour) > (first_value->hour) ) { return FirstValueIsLess; }
-	if ( (second_value->hour) < (first_value->hour) ) { return FirstValueIsGreater; }
-
-	// Сравнить минуту
-	if ( (second_value->minute) > (first_value->minute) ) { return FirstValueIsLess; }
-	if ( (second_value->minute) < (first_value->minute) ) { return FirstValueIsGreater; }
-
-	// Сравнить секунду
-	if ( (second_value->second) > (first_value->second) ) { return FirstValueIsLess; }
-	if ( (second_value->second) < (first_value->second) ) { return FirstValueIsGreater; }
-	*/
-
 	// Сравнить четырехлетия
 	if ( (first_value->fouryears) < (second_value->fouryears) ) { return FirstValueIsLess; }
 	if ( (first_value->fouryears) > (second_value->fouryears) ) { return FirstValueIsGreater; }
@@ -66,7 +44,7 @@ result_type CompareBshv(Bshv* first_value, Bshv* second_value)
 	// Если не произошел выход из функции по любому из условий выше, оба значения равны:
 	return Equal;
 }
-
+/*
 int CompareWithSystemBshv(Bshv* system_bshv, Bshv* local_bshv)
 {
 
@@ -81,5 +59,5 @@ int CompareWithSystemBshv(Bshv* system_bshv, Bshv* local_bshv)
 	return EXIT_SUCCESS;
 
 }
-
+*/
 

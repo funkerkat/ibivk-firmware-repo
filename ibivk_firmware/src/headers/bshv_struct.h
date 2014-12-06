@@ -8,7 +8,7 @@
 #ifndef BSHV_H_
 #define BSHV_H_
 
-typedef enum {NotUsed, FirstValueIsGreater, Equal, FirstValueIsLess} result_type;
+#include "compare.h"
 
 typedef struct _Bshv
 {
@@ -25,10 +25,8 @@ typedef struct _BshvExtention
 	signed int microsecond;
 }BshvExtention;
 
+// глобальная переменная -- системное время БШВ в приборе ИБИВК
 extern Bshv system_bshv;
-
-int CompareWithSystemBshv(Bshv*, Bshv*);		// удалить потом
-result_type CompareBshv(Bshv* old_bshv, Bshv* new_bshv);
 
 enum BshvBoundary
  {
@@ -47,5 +45,8 @@ enum BshvBoundary
 	 BSHV_SECOND_LOWER_BOUNDARY 		= 0,
 	 BSHV_SECOND_UPPER_BOUNDARY 		= 59,
  };
+
+// Прототипы функций
+result_type CompareBshv(Bshv* old_bshv, Bshv* new_bshv);
 
 #endif /* BSHV_H_ */

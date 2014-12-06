@@ -9,9 +9,15 @@
 #include "xSystem.h"
 #include "xMil1553BC.h"
 #include "xTimer.h"
-#include "list_microseconds.h"
+//#include "list_microseconds.h"
 #include "rx_queue.h"
 #include "mil1553.h"
+
+#include "nodes.h"
+
+// Прототипы:
+void RemoveItemFromListMicrosecond(NodeMicrosecond* this_item);
+
 
 void ExecuteCore1553()
 {
@@ -49,12 +55,20 @@ void ExecuteCore1553()
 	// требуется сохранение данных для выдачи УАРТ
 	if( (error_bits != 0) || (direction_bit == RTtoBC) )
 	{
-		// выделить память для хранения данных МКИО для последующей выдачи в УАРТ, скопировать данные:
+		// выделить память для хранения данных МКИО для последующей выдачи в УАРТ
 		Data1553* thisData1553 = (Data1553*) malloc(sizeof(Data1553));
+		// скопировать данные из связного списка в хранилище принятых данных
+		thisData1553->myBshvExtenion.myBshv.fouryears 	= global_microsecond->base_node_bshv->myBshv.fouryears;
+		thisData1553->myBshvExtenion.myBshv.day 		= global_microsecond->base_node_bshv->myBshv.day;
+		thisData1553->myBshvExtenion.myBshv.hour 		= global_microsecond->base_node_bshv->myBshv.hour;
+		thisData1553->myBshvExtenion.myBshv.minute 		= global_microsecond->base_node_bshv->myBshv.minute;
+		thisData1553->myBshvExtenion.myBshv.second 		= global_microsecond->base_node_bshv->myBshv.second;
+		thisData1553->myBshvExtenion.microsecond		= global_microsecond->microsecond;
 		thisData1553->command_word = cw;
 		thisData1553->status_word = sw;
 		int i; for (i=0; i<32; i++) { thisData1553->data_words[i] = global_microsecond->core1553_entry->data_words[i]; }
 
+		// Определить причину, по которой следует сохранить данные: ненулевые разряды в ОС МКИО или Ф2
 		 if (error_bits != 0)
 		 {
 			 thisData1553->isNormal = FALSE;

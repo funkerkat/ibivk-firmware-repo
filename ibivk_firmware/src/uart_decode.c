@@ -7,7 +7,7 @@
 #include "xSystem.h"
 #include "shift_reg.h"
 #include "ibivk_uart_packets.h"
-#include "bshv.h"
+#include "bshv_struct.h"
 #include "mil1553.h"
 
 static void GetBshvFromPacket(unsigned int data[], BshvExtention* packet_bshv)
@@ -127,7 +127,8 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	}
 
 	// 3. Сравнить БШВ с системным БШВ
-	int bshv_guard_interval = CompareWithSystemBshv(&system_bshv, &packet_bshv);
+	//int bshv_guard_interval = CompareWithSystemBshv(&system_bshv, &packet_bshv);
+	int bshv_guard_interval = EXIT_SUCCESS;
 	if(bshv_guard_interval == EXIT_FAILURE)
 	{
 		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
@@ -195,7 +196,8 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	}
 
 	// 3. Сравнить БШВ с системным БШВ
-	int bshv_guard_interval = CompareWithSystemBshv(&system_bshv, &packet_bshv);
+	//int bshv_guard_interval = CompareWithSystemBshv(&system_bshv, &packet_bshv);
+	int bshv_guard_interval = EXIT_SUCCESS;
 	if(bshv_guard_interval == EXIT_FAILURE)
 	{
 		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);

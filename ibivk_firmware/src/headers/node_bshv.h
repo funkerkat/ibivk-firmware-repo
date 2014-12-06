@@ -5,12 +5,12 @@
  *      Author: Ludmila
  */
 #include "bshv.h"
-#include "list_microseconds.h"
+#include "node_microsecond.h"
 
 #ifndef NODE_BSHV_H_
 #define NODE_BSHV_H_
-
-typedef struct NodeBshv
+/*
+typedef struct _NodeBshv
 {
 	struct NodeBshv* prev;
 	Bshv myBshv;
@@ -19,5 +19,5 @@ typedef struct NodeBshv
 }NodeBshv;
 
 extern NodeBshv* node_bshv_start;
-
+*/
 #endif /* NODE_BSHV_H_ */

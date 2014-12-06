@@ -7,16 +7,11 @@
 
 #include <stdlib.h>
 #include "xSystem.h"
-#include "bshv.h"
 #include "bus_controller.h"
 #include "xMil1553BC.h"
-#include "node_bshv.h"
-#include "bshv.h"
+#include "bshv_struct.h"
+#include "nodes.h"
 
-#include "list_microseconds.h"
-
-int AddNodeBshvItem(NodeBshv** p_start, NodeBshv* new_item);
-int CountItemsInListBshv(NodeBshv** p_start);
 
 int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 {
@@ -31,8 +26,7 @@ int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 	if (thisNodeBshv->ptr == NULL) { CreateListMicrosecond(&(thisNodeBshv->ptr)); }
 
 	// Добавить текущую микросекунду в список микросекунд
-	AddNodeMicrosecondItem(&(thisNodeBshv->ptr), p_entry, b->microsecond);
-
+	AddNodeMicrosecondItem(&(thisNodeBshv->ptr), p_entry, b->microsecond, thisNodeBshv);
 
 
 

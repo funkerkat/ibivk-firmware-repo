@@ -8,8 +8,8 @@
 #ifndef RX_QUEUE_H_
 #define RX_QUEUE_H_
 
-#include "bshv.h"
 #include "bus_controller.h"
+#include "bshv_struct.h"
 
 typedef struct _Data1553
 {

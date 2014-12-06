@@ -6,9 +6,17 @@
  */
 
 #include <stdlib.h>
-#include "list_microseconds.h"
 
-typedef enum {NotUsed, FirstValueIsGreater, Equal, FirstValueIsLess} result_type;
+//#include "list_microseconds.h"
+
+#include "nodes.h"
+#include "list_bshv.h"
+
+enum WatchdogNodeMicrosecondsValues
+ {
+	 NODE_MICROSECOND_MIN 	= -1,
+	 NODE_MICROSECOND_MAX 	= 0x7FFFFFFF,
+ };
 
 NodeMicrosecond* global_microsecond;
 
@@ -72,9 +80,10 @@ static void InsertNodeMicrosecond(NodeMicrosecond *this_item, NodeMicrosecond *n
 
 }
 
-static NodeMicrosecond* CreateNodeMicrosecond(signed int mcs, EntryCore1553* entry)
+static NodeMicrosecond* CreateNodeMicrosecond(signed int mcs, EntryCore1553* entry, NodeBshv* thisNodeBshv)
 {
 	NodeMicrosecond* new_item = (NodeMicrosecond*) malloc(sizeof(NodeMicrosecond));
+	new_item->base_node_bshv = thisNodeBshv;
 	new_item->microsecond = mcs;
 	new_item->core1553_entry = entry;
 	new_item->next = NULL;
@@ -82,8 +91,45 @@ static NodeMicrosecond* CreateNodeMicrosecond(signed int mcs, EntryCore1553* ent
 	return new_item;
 }
 
+int CountItemsInListMicrosecondNew(NodeMicrosecond* p_start)
+{
+	NodeMicrosecond *this = p_start;		// указатель на текущий элемент списка
+	int n = 0;
+	while(this)
+	{
+		n++;
+		this = this->next;
+	}
+	if (n<2) { return -1; }	// Ошибка! В списке должно быть минимум два (сторожевых) элемента.
+	return (n-2);			// n - кол-во элементов в списке, не считая сторожевых эл-тов
+}
+
+/*
+void DeleteListMicrosecond(NodeMicrosecond** p_start)
+{
+	NodeMicrosecond *start = *p_start;	// указатель на первый элемент списка
+	NodeMicrosecond *this = start;		// указатель на текущий элемент списка
+	NodeMicrosecond* next_item = NULL;	// переменная для временного хранения указателя на след. элемент
+
+	while(this)
+	{
+		// сохранить указатель на следующий элемент
+		next_item = this->next;
+		// удалить текущий элемент
+		free(this);
+		this = NULL;
+		// переключиться на следующий элемент
+		this = next_item;
+	}
+    *p_start = NULL;
+}
+*/
 void RemoveItemFromListMicrosecond(NodeMicrosecond* this_item)
 {
+	// сохраним на будущее ссылки на текущий элемент БШВ и точку вхождения в список микросекунд
+	NodeBshv* base_bshv = this_item->base_node_bshv;
+	NodeMicrosecond* p_enter = base_bshv->ptr;
+
 	// найти предшествующий и следующий элемент списка
 	NodeMicrosecond* prev_item = this_item->prev;
 	NodeMicrosecond* next_item = this_item->next;
@@ -102,12 +148,17 @@ void RemoveItemFromListMicrosecond(NodeMicrosecond* this_item)
 	free(this_item);
 	this_item = NULL;
 
-	// посчитать количество сообщений в списке на текущую микросекунду, если сообщений нет -- удалить микросекунду
-	//unsigned int n =
+	// посчитать количество сообщений в списке на текущую секунду
+	unsigned int n = CountItemsInListMicrosecondNew(p_enter);
 
+	// если на текущую секунду нет записей, удалить текущую секунду БШВ из списка секунд
+	if (n == 0)
+	{
+		RemoveItemFromNodeBshvList(base_bshv);
+	}
 }
 
-int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, signed int mcs)
+int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, signed int mcs, NodeBshv* thisNodeBshv)
 {
 	NodeMicrosecond *start = *p_start;	// указатель на первый элемент списка
 	NodeMicrosecond *this = start;		// указатель на текущий элемент списка
@@ -138,7 +189,7 @@ int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, sign
 
 			case FirstValueIsGreater:
 			{
-				NodeMicrosecond* new_item = CreateNodeMicrosecond(mcs, entry);
+				NodeMicrosecond* new_item = CreateNodeMicrosecond(mcs, entry, thisNodeBshv);
 				InsertNodeMicrosecond(this, new_item);		// Вставляем элемент в середину списка
 				return EXIT_SUCCESS;
 			}
@@ -151,25 +202,7 @@ int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, sign
 	return EXIT_FAILURE;
 }
 
-void DeleteListMicrosecond(NodeMicrosecond** p_start)
-{
-	NodeMicrosecond *start = *p_start;	// указатель на первый элемент списка
-	NodeMicrosecond *this = start;		// указатель на текущий элемент списка
-	NodeMicrosecond* next_item = NULL;	// переменная для временного хранения указателя на след. элемент
-
-	while(this)
-	{
-		// сохранить указатель на следующий элемент
-		next_item = this->next;
-		// удалить текущий элемент
-		free(this);
-		this = NULL;
-		// переключиться на следующий элемент
-		this = next_item;
-	}
-    *p_start = NULL;
-}
-
+/*
 int CountItemsInListMicrosecond(NodeMicrosecond** p_start)
 {
 	NodeMicrosecond *start = *p_start;	// указатель на первый элемент списка
@@ -183,6 +216,7 @@ int CountItemsInListMicrosecond(NodeMicrosecond** p_start)
 	if (n<2) { return -1; }	// Ошибка! В списке должно быть минимум два (сторожевых) элемента.
 	return (n-2);			// n - кол-во элементов в списке, не считая сторожевых эл-тов
 }
+*/
 
 void CreateListMicrosecond(NodeMicrosecond** p_start)
 {

@@ -8,19 +8,7 @@
 #ifndef IBIVK_UART_PACKETS_H_
 #define IBIVK_UART_PACKETS_H_
 
-#include "shift_reg.h"
-#include "bshv.h"
-
 #define PACKET_LENGTH_MIN_VALUE		(2)			// минимальное кол-во байт в пакете = 2  (НП и КС)
-
-void SendDiagnosticAnswer(unsigned int);
-//void SendDiagnosticAnswer(unsigned int error_code, unsigned int received_cs, unsigned int received_id);
-void UartDecodePackets(Byte*, unsigned int);
-int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[]);
-int LoadPacketF2(BshvExtention* b, unsigned int cw);
-
-void DiagnosticAnswer(unsigned int received_cs, unsigned int received_id, unsigned int error_code);
-void UartDecode(unsigned int data[], unsigned int n);
 
 enum HEAD_VALUES
  {

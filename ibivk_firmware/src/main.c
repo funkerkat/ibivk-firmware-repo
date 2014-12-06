@@ -21,7 +21,8 @@ void LinkedListDemo(void);
 void InitSystemBshv(void);
 void UartSettings(void);
 
-#include "node_bshv.h"
+//#include "node_bshv.h"
+#include "nodes.h"
 #include "rx_queue.h"
 
 int main(void)
