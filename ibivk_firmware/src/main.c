@@ -38,7 +38,7 @@ int main(void)
 
 	InitListBshv();
 
-	TestFpga();
+	//TestFpga();
 
 	while(1)
 	{

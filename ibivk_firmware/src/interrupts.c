@@ -36,7 +36,7 @@ void Handler_irq_4()
 {
 	// IRQMP_320MS
 
-	ReadSystemBshv();
+	//ReadSystemBshv();
 
 	int t = 0;
 	t++;
@@ -54,7 +54,7 @@ void Handler_irq_6()
 
 void Handler_irq_7()
 {
-	//ExecuteCore1553();
+	ExecuteCore1553();
 }
 
 void Handler_irq_8()
