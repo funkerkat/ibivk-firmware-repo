@@ -10,6 +10,7 @@
 
 // библиотеки текущего проекта
 #include "nodes.h"
+#include "watch_node_values.h"
 
 // глобальная переменная -- точка входа в список секунд БШВ
 NodeBshv* node_bshv_start;
@@ -22,11 +23,11 @@ static void CreateLinkedList(NodeBshv** p_start)
 	// 1. Создадим первый (first) элемент списка:
 	// выделить память и присвоить значения
     NodeBshv* first_item = (NodeBshv*) malloc(sizeof(NodeBshv));
-    first_item->myBshv.fouryears = -1;
-    first_item->myBshv.day = -1;
-    first_item->myBshv.hour = -1;
-    first_item->myBshv.minute = -1;
-    first_item->myBshv.second = -1;
+    first_item->myBshv.fouryears = WATCH_NODE_VALUE_MIN;
+    first_item->myBshv.day = WATCH_NODE_VALUE_MIN;
+    first_item->myBshv.hour = WATCH_NODE_VALUE_MIN;
+    first_item->myBshv.minute = WATCH_NODE_VALUE_MIN;
+    first_item->myBshv.second = WATCH_NODE_VALUE_MIN;
     first_item->ptr = NULL;
     // установить указатель на след. элемент в NULL, потом переставить на last_item
     first_item->next = NULL;
@@ -37,11 +38,11 @@ static void CreateLinkedList(NodeBshv** p_start)
 	// 2. Создадим последний (last) элемент списка:
 	// выделить память и присвоить значения
     NodeBshv* last_item = (NodeBshv*) malloc(sizeof(NodeBshv));
-    last_item->myBshv.fouryears = 0x7FFFFFFF;
-    last_item->myBshv.day = 0x7FFFFFFF;
-    last_item->myBshv.hour = 0x7FFFFFFF;
-    last_item->myBshv.minute = 0x7FFFFFFF;
-    last_item->myBshv.second = 0x7FFFFFFF;
+    last_item->myBshv.fouryears = WATCH_NODE_VALUE_MAX;
+    last_item->myBshv.day = WATCH_NODE_VALUE_MAX;
+    last_item->myBshv.hour = WATCH_NODE_VALUE_MAX;
+    last_item->myBshv.minute = WATCH_NODE_VALUE_MAX;
+    last_item->myBshv.second = WATCH_NODE_VALUE_MAX;
     last_item->ptr = NULL;
     // установить указатель на след. элемент в NULL, т. к. элемент последний в списке
     last_item->next = NULL;

@@ -10,15 +10,10 @@
 
 // библиотеки текущего проекта
 #include "nodes.h"
+#include "watch_node_values.h"
 
 // прототипы функций
 #include "list_bshv.h"
-
-enum WatchdogNodeMicrosecondsValues
- {
-	 NODE_MICROSECOND_MIN 	= -1,
-	 NODE_MICROSECOND_MAX 	= 0x7FFFFFFF,
- };
 
 NodeMicrosecond* global_microsecond;
 
@@ -228,7 +223,7 @@ void CreateListMicrosecond(NodeMicrosecond** p_start)
 	// 1. Создадим первый (first) элемент списка:
 	// выделить память и присвоить значения
 	NodeMicrosecond* first_item = (NodeMicrosecond*) malloc(sizeof(NodeMicrosecond));
-    first_item->microsecond = NODE_MICROSECOND_MIN;
+    first_item->microsecond = WATCH_NODE_VALUE_MIN;
     first_item->timer_value = 0;
 
     // установить указатель на след. элемент в NULL, потом переставить на last_item
@@ -240,7 +235,7 @@ void CreateListMicrosecond(NodeMicrosecond** p_start)
 	// 2. Создадим последний (last) элемент списка:
 	// выделить память и присвоить значения
     NodeMicrosecond* last_item = (NodeMicrosecond*) malloc(sizeof(NodeMicrosecond));
-    last_item->microsecond = NODE_MICROSECOND_MAX;
+    last_item->microsecond = WATCH_NODE_VALUE_MAX;
     last_item->timer_value = 0;
 
     // установить указатель на след. элемент в NULL, т. к. элемент последний в списке
