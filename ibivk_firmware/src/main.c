@@ -20,6 +20,12 @@
 #include "list_bshv.h"
 
 
+void Fuck()
+{
+
+}
+
+
 int main(void)
 {
 	CORE1553_SOFTWARE_RESET();
@@ -42,6 +48,10 @@ int main(void)
 
 	while(1)
 	{
+		if (uart_tx_queue.store != 0)
+		{
+			AnalyzeQueue();
+		}
 
 
 	}

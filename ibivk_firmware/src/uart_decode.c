@@ -243,11 +243,11 @@ void UartDecode(unsigned int data[], unsigned int n)
 
 	switch(id)
 	{
-		case ID_PACKET_BC_TO_RT:
+		case ID_PACKET_PC_TO_IBIVK_F1:
 			Packet_BC_to_RT(data, n);
 			break;
 
-		case ID_PACKET_RT_TO_BC:
+		case ID_PACKET_PC_TO_IBIVK_F2:
 			Packet_RT_to_BC(data, n);
 			break;
 

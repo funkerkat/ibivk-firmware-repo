@@ -7,6 +7,7 @@
 
 // библиотеки для работы с периферией
 #include "xUart.h"
+#include "xIrqmp.h"
 
 // прототипы функций
 #include "timer.h"
@@ -28,8 +29,10 @@ void Handler_irq_2()
 void Handler_irq_3()
 {
 	// UART 2
+	IRQMP_DISABLE();
 	unsigned int value = (*UART2_READ_BYTE) & 0xFF;
 	AddByteToBuffer(value);
+	IRQMP_ENABLE();
 }
 
 void Handler_irq_4()
@@ -54,7 +57,9 @@ void Handler_irq_6()
 
 void Handler_irq_7()
 {
+	IRQMP_DISABLE();
 	ExecuteCore1553();
+	IRQMP_ENABLE();
 }
 
 void Handler_irq_8()

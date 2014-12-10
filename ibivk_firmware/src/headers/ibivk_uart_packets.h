@@ -27,31 +27,28 @@ enum PacketFields
 	 CONTROLSUM_SIZE 				= 1,
  };
 
-enum PacketIDs_PC_to_IBIVK
- {
-	 ID_PACKET_BC_TO_RT 		= 0x50,
-	 ID_PACKET_RT_TO_BC 		= 0x51,
- };
-
-enum PacketIDs_IBIVK_to_PC
+enum PacketIDs
  {
 	 ID_DIAGNOSTIC_ANSWER 		= 0x01,
+	 ID_PACKET_PC_TO_IBIVK_F1 	= 0x50,
+	 ID_PACKET_PC_TO_IBIVK_F2 	= 0x51,
+	 ID_PACKET_IBIVK_TO_PC_F1 	= 0x52,
+	 ID_PACKET_IBIVK_TO_PC_F2 	= 0x53,
  };
+
 
 enum Packets_Data_Bytecount
  {
 	 bshv_byte_size						= (9),
 	 commandword_byte_size				= (1*2),
+	 statusword_byte_size				= (1*2),
 	 BYTECOUNT_PACKET_BC_TO_RT_LOWER 	= (bshv_byte_size + commandword_byte_size + 1*2),
 	 BYTECOUNT_PACKET_BC_TO_RT_UPPER 	= (bshv_byte_size + commandword_byte_size + 32*2),
 	 BYTECOUNT_PACKET_RT_TO_BC 			= (bshv_byte_size + 1*2),
 	 BYTECOUNT_DIAGNOSTIC_ANSWER 		= (3),
+	 SERVICE_BYTES_LENGTH = (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + CONTROLSUM_SIZE),
  };
 
-enum DiagnosticAnswerPacketLength
- {
-	 DIAGNOSTIC_ANSWER_TOTAL_LENGTH = (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + BYTECOUNT_DIAGNOSTIC_ANSWER + CONTROLSUM_SIZE),
- };
 
 enum DiagnosticAnswerErrorCodes
  {
