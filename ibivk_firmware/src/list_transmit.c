@@ -34,7 +34,8 @@ void SendItemToUart()
 			break;
 
 		case ID_PACKET_IBIVK_TO_PC_F1:
-			//AddItemPriorityLeast(item);
+			//void IbivkToPcMessageF1(BshvExtention bshv_ext, unsigned short cw, unsigned short sw)
+			IbivkToPcMessageF1(item->data.data_ibivk_to_pc_f1.myBshvExtenion, item->data.data_ibivk_to_pc_f1.command_word, item->data.data_ibivk_to_pc_f1.status_word);
 			break;
 
 		case ID_PACKET_IBIVK_TO_PC_F2:

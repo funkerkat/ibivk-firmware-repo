@@ -19,6 +19,8 @@
 #include "list_transmit_struct.h"
 #include "list_bshv.h"
 
+// прототипы функций
+#include "list_transmit.h"
 
 void DisableCache()
 {
@@ -37,7 +39,7 @@ int main(void)
 	IRQMP_CLEAR();
 	InitInterruptHandlers();
 	// ------------------------
-	InitSystemBshv();
+	InitSystemBshv();		// ?
 
 	CORE1553_INIT();
 	TIMER_INIT();
@@ -45,24 +47,16 @@ int main(void)
 	GRGPIO_INIT();
 	IRQMP_ENABLE();
 
-	//QUEUE_CLEAN_POINTERS();
 
 	InitListBshv();
 
 
-	//AnalyzeNewQueue();
-
 	//TestFpga();
-
-	//DemoListTransmit();
 
 	while(1)
 	{
-
-		if (head_list_transmit != NULL)
-		{
-			SendItemToUart();
-		}
+		// Если в очереди на выдачу в УАРТ есть элементы, осуществить выдачу
+		if (head_list_transmit != NULL) { SendItemToUart(); }
 
 
 	}

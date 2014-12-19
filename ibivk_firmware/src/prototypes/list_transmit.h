@@ -10,5 +10,6 @@
 
 void MakeDiagnosticAnswer(unsigned short cs, unsigned short id, unsigned short code_error);
 //void AddItemToListTransmit(ListTransmit* item);
+void SendItemToUart();
 
 #endif /* LIST_TRANSMIT_H_ */
