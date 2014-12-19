@@ -20,14 +20,19 @@
 #include "list_bshv.h"
 
 
-void Fuck()
+void DisableCache()
 {
-
+	asm("set 0, %g0");
+	asm("lda [%g0]2, %g1");
+	asm("and 0xFFFFFFF0, %g1, %g2");
+	asm("set 0x400000, %g4");
+	asm("or %g4, %g2, %g3");
+	asm("sta %g3, [%g0]2");
 }
-
 
 int main(void)
 {
+	DisableCache();
 	CORE1553_SOFTWARE_RESET();
 	IRQMP_CLEAR();
 	InitInterruptHandlers();
@@ -40,22 +45,28 @@ int main(void)
 	GRGPIO_INIT();
 	IRQMP_ENABLE();
 
-	QUEUE_CLEAN_POINTERS();
+	//QUEUE_CLEAN_POINTERS();
 
 	InitListBshv();
 
+
+	//AnalyzeNewQueue();
+
 	//TestFpga();
+
+	//DemoListTransmit();
 
 	while(1)
 	{
+		/*
 		if (uart_tx_queue.store != 0)
 		{
-			AnalyzeQueue();
+			//AnalyzeQueue();
 		}
+		*/
 
 
 	}
-
 
 	return EXIT_SUCCESS;
 }

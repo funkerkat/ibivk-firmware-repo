@@ -14,7 +14,7 @@
 #include "mil1553.h"
 
 // прототипы функций
-#include "uart_tx.h"
+#include "list_transmit.h"
 #include "load_data.h"
 
 static void GetBshvFromPacket(unsigned int data[], BshvExtention* packet_bshv)
@@ -119,7 +119,8 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	unsigned int n_info_bytes = n - (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + CONTROLSUM_SIZE);
 	if ((n_info_bytes < BYTECOUNT_PACKET_BC_TO_RT_LOWER) || (n_info_bytes > BYTECOUNT_PACKET_BC_TO_RT_UPPER))
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
 		return;
 	}
 
@@ -129,7 +130,8 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	int bshv_result = ValidateBshvBoundaries(&packet_bshv);
 	if(bshv_result == EXIT_FAILURE)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
 		return;
 	}
 
@@ -138,7 +140,8 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	int bshv_guard_interval = EXIT_SUCCESS;
 	if(bshv_guard_interval == EXIT_FAILURE)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
 		return;
 	}
 
@@ -149,7 +152,8 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	unsigned int dir = GetDirection(cw);
 	if(dir != BCtoRT)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_DIRECTION);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_DIRECTION);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_DIRECTION);
 		return;
 	}
 
@@ -158,7 +162,8 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	unsigned int n_databytes = n - (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE) - bshv_byte_size - commandword_byte_size - CONTROLSUM_SIZE;
 	if((n_datawords*2) != n_databytes)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_CW_WORDCOUNT);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_CW_WORDCOUNT);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_CW_WORDCOUNT);
 		return;
 	}
 
@@ -171,7 +176,8 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	int load_result = LoadPacketF1(&packet_bshv, cw, data_shorts);
 	if(load_result == EXIT_SUCCESS)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);
 	}
 
 }
@@ -188,7 +194,8 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	unsigned int n_info_bytes = n - (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + CONTROLSUM_SIZE);
 	if (n_info_bytes != BYTECOUNT_PACKET_RT_TO_BC)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
 		return;
 	}
 
@@ -198,7 +205,8 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	int bshv_result = ValidateBshvBoundaries(&packet_bshv);
 	if(bshv_result == EXIT_FAILURE)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
 		return;
 	}
 
@@ -207,7 +215,8 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	int bshv_guard_interval = EXIT_SUCCESS;
 	if(bshv_guard_interval == EXIT_FAILURE)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
 		return;
 	}
 
@@ -218,7 +227,8 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	unsigned int dir = GetDirection(cw);
 	if(dir != RTtoBC)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_DIRECTION);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_DIRECTION);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_DIRECTION);
 		return;
 	}
 
@@ -226,7 +236,8 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	int load_result = LoadPacketF2(&packet_bshv, cw);
 	if(load_result == EXIT_SUCCESS)
 	{
-		DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);
+		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);
+		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);
 	}
 
 }
@@ -253,7 +264,8 @@ void UartDecode(unsigned int data[], unsigned int n)
 
 		default:
 			// "Ошибка: неверный идентификатор пакета"
-			DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_ID);
+			//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_ID);
+			MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_ID);
 			break;
 	}
 }

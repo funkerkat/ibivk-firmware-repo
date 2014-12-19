@@ -15,7 +15,7 @@
 
 // прототипы функций
 #include "uart_tx.h"
-
+/*
 UartTransmitQueue uart_tx_queue;
 
 void UartTransmitQueueStore(Data1553* thisData1553)
@@ -48,7 +48,7 @@ Data1553* UartTransmitQueueRetrive()
 	return p_data;
 }
 
-void SendUartPackets(Data1553 *p_data)
+static void SendUartPackets(Data1553 *p_data)
 {
     unsigned short cw = p_data->command_word;
     unsigned int direction;
@@ -82,14 +82,29 @@ static void QueueShiftLeft()
 	uart_tx_queue.store--;
 }
 
+static void QueueShiftRight()
+{
+	int i;
+	for (i=0; i<(DATA1553_ARRAY_SIZE-1); i++)
+	{
+		uart_tx_queue.data1553_array[i+1] = uart_tx_queue.data1553_array[i];
+	}
+}
+
+void AddPacketPriorityFirst()
+{
+
+}
+
 void AnalyzeQueue()
 {
 	if (uart_tx_queue.store > uart_tx_queue.retrive)
 	{
 		// в очереди имеются сообщения для выдачи в УАРТ
 		Data1553* p_data = UartTransmitQueueRetrive();
+		QueueShiftLeft();
 	    SendUartPackets(p_data);
-	    QueueShiftLeft();
+	    // QueueShiftLeft();
 	}
 	else
 	{
@@ -99,4 +114,4 @@ void AnalyzeQueue()
 }
 
 
-
+*/

@@ -80,7 +80,7 @@ static void AddServiceBytes(unsigned int data[], unsigned int n_data, unsigned i
 	}
 }
 
-void DiagnosticAnswer(unsigned int received_cs, unsigned int received_id, unsigned int error_code)
+void DiagnosticAnswer2(unsigned int received_cs, unsigned int received_id, unsigned int error_code)
 {
 	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_DIAGNOSTIC_ANSWER)
 	unsigned int data[DATA_LENGH];
@@ -91,7 +91,7 @@ void DiagnosticAnswer(unsigned int received_cs, unsigned int received_id, unsign
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 2] = error_code;
 
 	// Добавить слежубные байты
-	AddServiceBytes(data, DATA_LENGH, ID_DIAGNOSTIC_ANSWER);
+	AddServiceBytes(data, DATA_LENGH, ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER);
 	#undef DATA_LENGH
 }
 

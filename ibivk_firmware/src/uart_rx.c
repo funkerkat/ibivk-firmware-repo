@@ -15,8 +15,7 @@
 
 // прототипы функций
 #include "uart_decode.h"
-#include "uart_tx.h"
-
+#include "list_transmit.h"
 
 unsigned int buffer[BUFFER_LENGTH];
 
@@ -108,14 +107,16 @@ static void SearchInBuffer(ReceiveBufferParams* params )
 		{
 			// "Ошибка: несовпадение контрольной суммы"
 			unsigned int id = buffer[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE - 1];
-			DiagnosticAnswer(cs_p, id, DIAGNOSTIC_ANSWER_ERROR_CS);
+			//DiagnosticAnswer(cs_p, id, DIAGNOSTIC_ANSWER_ERROR_CS);
+			MakeDiagnosticAnswer(cs_p, id, DIAGNOSTIC_ANSWER_ERROR_CS);
     		BufferShift(params);
 		}
 	}
 	// ----- Ошибка: -----
 	else
 	{
-		DiagnosticAnswer(0, 0, DIAGNOSTIC_ANSWER_ERROR_ALARM);
+		//DiagnosticAnswer(0, 0, DIAGNOSTIC_ANSWER_ERROR_ALARM);
+		// алгоритмическая ошибка
 	}
 
 }
@@ -130,9 +131,6 @@ void AddByteToBuffer(unsigned int val)
     while ((params.validate_cnt) < (params.buffer_cnt))
     {
     	SearchInBuffer(&params);
-
-        int t = 0;
-        t++;
     }
 
 }

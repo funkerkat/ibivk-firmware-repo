@@ -10,16 +10,9 @@
 
 #include "bus_controller_struct.h"
 #include "bshv_struct.h"
+#include "data1553_struct.h"
 
-typedef struct _Data1553
-{
-	BshvExtention myBshvExtenion;
-	unsigned short command_word;
-	unsigned short status_word;
-	unsigned short data_words[32];
-	unsigned int isNormal;
-}Data1553;
-
+/*
 
 #define DATA1553_ARRAY_SIZE	255
 typedef struct _UartTransmitQueue
@@ -38,5 +31,5 @@ extern UartTransmitQueue uart_tx_queue;
 }
 
 void UartTransmitQueueStore(Data1553* thisData1553);
-
+*/
 #endif /* UART_TX_QUEUE_STRUCT_H_ */

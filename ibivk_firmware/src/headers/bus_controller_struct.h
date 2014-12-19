@@ -34,14 +34,14 @@ enum Core1553_ControlWord
 
 typedef struct CommandBlock
 {
-	unsigned short ControlWord;
-	unsigned short CommandWord1;
-	unsigned short CommandWord2;
-	unsigned short DataPointer;
-	unsigned short StatusWord1;
-	unsigned short StatusWord2;
-	unsigned short BranchAddress;
-	unsigned short Timer;
+	volatile unsigned short ControlWord;
+	volatile unsigned short CommandWord1;
+	volatile unsigned short CommandWord2;
+	volatile unsigned short DataPointer;
+	volatile unsigned short StatusWord1;
+	volatile unsigned short StatusWord2;
+	volatile unsigned short BranchAddress;
+	volatile unsigned short Timer;
 }CommandBlock;
 
 typedef struct EntryCore1553
