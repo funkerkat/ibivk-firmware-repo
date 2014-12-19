@@ -14,22 +14,40 @@
 #include "mil1553.h"
 
 // прототипы функций
-// --
+#include "uart_tx.h"
 
 
 ListTransmit* head_list_transmit;
 
 // -------------------------------------------------------------------------
-static void SendFirstItemToUart()
+void SendItemToUart()
 {
 	// извлечь из списка первый элемент
-	ListTransmit* this = head_list_transmit;
-	head_list_transmit = this->next;
+	ListTransmit* item = head_list_transmit;
+	head_list_transmit = item->next;
 
 	// выдать извлеченный элемент в УАРТ
+	switch(item->packet_id)
+	{
+		case ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER:
+			DiagnosticAnswer(item->data.data_diagnostic_answer.receiver_id, item->data.data_diagnostic_answer.receiver_cs, item->data.data_diagnostic_answer.code_error);
+			break;
+
+		case ID_PACKET_IBIVK_TO_PC_F1:
+			//AddItemPriorityLeast(item);
+			break;
+
+		case ID_PACKET_IBIVK_TO_PC_F2:
+			//IbivkToPcMessageF2();
+			break;
+
+		default:
+			// алгоритмическая ошибка
+			break;
+	}
 
 	// освободить память
-	free(this);
+	free(item);
 }
 
 // -------------------------------------------------------------------------
@@ -198,7 +216,7 @@ void DemoListTransmit()
 
 		if (head_list_transmit != NULL)
 		{
-			SendFirstItemToUart();
+			SendItemToUart();
 		}
 
 

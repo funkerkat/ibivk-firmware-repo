@@ -16,7 +16,7 @@
 #include "xGrgpio.h"
 
 // библиотеки текущего проекта
-#include "uart_tx_queue_struct.h"
+#include "list_transmit_struct.h"
 #include "list_bshv.h"
 
 
@@ -58,12 +58,11 @@ int main(void)
 
 	while(1)
 	{
-		/*
-		if (uart_tx_queue.store != 0)
+
+		if (head_list_transmit != NULL)
 		{
-			//AnalyzeQueue();
+			SendItemToUart();
 		}
-		*/
 
 
 	}

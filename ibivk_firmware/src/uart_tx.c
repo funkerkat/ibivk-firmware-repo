@@ -80,7 +80,7 @@ static void AddServiceBytes(unsigned int data[], unsigned int n_data, unsigned i
 	}
 }
 
-void DiagnosticAnswer2(unsigned int received_cs, unsigned int received_id, unsigned int error_code)
+void DiagnosticAnswer(unsigned int received_id, unsigned int received_cs, unsigned int error_code)
 {
 	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_DIAGNOSTIC_ANSWER)
 	unsigned int data[DATA_LENGH];

@@ -14,7 +14,6 @@
 #include "xTimer.h"
 
 // библиотеки текущего проекта
-//#include "uart_tx_queue_struct.h"
 #include "list_transmit_struct.h"
 #include "ibivk_uart_packets.h"
 #include "mil1553.h"
@@ -65,7 +64,6 @@ void ExecuteCore1553()
 	 {
 		 // установить тип пакета
 		 item->packet_id = ID_PACKET_IBIVK_TO_PC_F1;
-
 		 // скопировать ответное слово
 		 item->data.data_ibivk_to_pc_f1.status_word = sw;
 	 }
@@ -73,9 +71,9 @@ void ExecuteCore1553()
 	 {
 		 // установить тип пакета
 		 item->packet_id = ID_PACKET_IBIVK_TO_PC_F2;
-
-		 // скопировать ответное слово и слова данных
+		 // скопировать ответное слово
 		 item->data.data_ibivk_to_pc_f2.status_word = sw;
+		 // скопировать слова данных
 		 int i; for (i=0; i<32; i++) { item->data.data_ibivk_to_pc_f2.data_words[i] = global_microsecond->core1553_entry->data_words[i]; }
 	 }
 	 else
