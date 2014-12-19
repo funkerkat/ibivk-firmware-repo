@@ -50,6 +50,8 @@ int main(void)
 
 	InitListBshv();
 
+	// инициализация очередь сообщений на выдачу в УАРТ
+	InitListTransmit();
 
 	//TestFpga();
 

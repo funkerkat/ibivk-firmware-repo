@@ -16,42 +16,8 @@
 // прототипы функций
 #include "uart_tx.h"
 
-
 ListTransmit* head_list_transmit;
 
-// -------------------------------------------------------------------------
-void SendItemToUart()
-{
-	// извлечь из списка первый элемент
-	ListTransmit* item = head_list_transmit;
-	head_list_transmit = item->next;
-
-	// выдать извлеченный элемент в УАРТ
-	switch(item->packet_id)
-	{
-		case ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER:
-			DiagnosticAnswer(item->data.data_diagnostic_answer.receiver_id, item->data.data_diagnostic_answer.receiver_cs, item->data.data_diagnostic_answer.code_error);
-			break;
-
-		case ID_PACKET_IBIVK_TO_PC_F1:
-			//void IbivkToPcMessageF1(BshvExtention bshv_ext, unsigned short cw, unsigned short sw)
-			IbivkToPcMessageF1(item->data.data_ibivk_to_pc_f1.myBshvExtenion, item->data.data_ibivk_to_pc_f1.command_word, item->data.data_ibivk_to_pc_f1.status_word);
-			break;
-
-		case ID_PACKET_IBIVK_TO_PC_F2:
-			//IbivkToPcMessageF2();
-			break;
-
-		default:
-			// алгоритмическая ошибка
-			break;
-	}
-
-	// освободить память
-	free(item);
-}
-
-// -------------------------------------------------------------------------
 static void AddItemPriorityFirst(ListTransmit* new_item)
 {
 	// список изначально пустой, тогда новый элемент -- одновременно первый и последний
@@ -88,45 +54,42 @@ static void AddItemPriorityLeast(ListTransmit* new_item)
 }
 
 
-// -------------------------------------------------------------------------
-/*
-void AddData1553ToListTransmit(Data1553* data)
+void SendItemToUart()
 {
-	// создать новый объект в буфере для выдачи в УАРТ
-	ListTransmit* item = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item->data.data1553_obj = data;
+	// извлечь из списка первый элемент
+	ListTransmit* item = head_list_transmit;
+	head_list_transmit = item->next;
 
-	// определить формат пакета УАРТ (Ф1/Ф2)
-	unsigned short direction;
-	MIL1553_GET_DIRECTION_BIT(data->command_word, &direction);
-
-	// пределить ID пакета
-	if (direction == BCtoRT) 		{ item->packet_id = ID_PACKET_IBIVK_TO_PC_F1; }
-	else if (direction == RTtoBC) 	{ item->packet_id = ID_PACKET_IBIVK_TO_PC_F2; }
-	else
+	// выдать извлеченный элемент в УАРТ
+	switch(item->packet_id)
 	{
-		// агоритмическая ошибка
+		case ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER:
+			DiagnosticAnswer  (item->data.data_diagnostic_answer.receiver_id,
+							   item->data.data_diagnostic_answer.receiver_cs,
+							   item->data.data_diagnostic_answer.code_error);
+			break;
+
+		case ID_PACKET_IBIVK_TO_PC_F1:
+			IbivkToPcMessageF1(item->data.data_ibivk_to_pc_f1.myBshvExtenion,
+							   item->data.data_ibivk_to_pc_f1.command_word,
+							   item->data.data_ibivk_to_pc_f1.status_word);
+			break;
+
+		case ID_PACKET_IBIVK_TO_PC_F2:
+			IbivkToPcMessageF2(item->data.data_ibivk_to_pc_f2.myBshvExtenion,
+							   item->data.data_ibivk_to_pc_f2.command_word,
+							   item->data.data_ibivk_to_pc_f2.status_word,
+							   item->data.data_ibivk_to_pc_f2.data_words);
+			break;
+
+		default:
+			// алгоритмическая ошибка
+			break;
 	}
 
-	// включить объект в буфер
-	AddItemPriorityLeast(item);
+	// освободить память
+	free(item);
 }
-
-void AddDiagnAnswerToListTransmit(DataDiagnosticAnswer* data)
-{
-	// создать новый объект в буфере для выдачи в УАРТ
-	ListTransmit* item = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item->data.data_diagnostic_answer_obj = data;
-
-	// пределить ID пакета
-	item->packet_id = ID_DIAGNOSTIC_ANSWER;
-
-	// включить объект в буфер
-	AddItemPriorityFirst(item);
-}
-*/
-
-// -------------------------------------------------------------------------
 
 void AddItemToListTransmit(ListTransmit* item)
 {
@@ -148,9 +111,7 @@ void AddItemToListTransmit(ListTransmit* item)
 			// алгоритмическая ошибка
 			break;
 	}
-
 }
-
 
 void MakeDiagnosticAnswer(unsigned short cs, unsigned short id, unsigned short code_error)
 {
@@ -165,70 +126,7 @@ void MakeDiagnosticAnswer(unsigned short cs, unsigned short id, unsigned short c
 
 void InitListTransmit()
 {
+	// Установить начало очереди в NULL (т. е. очередь отсутствует)
 	head_list_transmit = NULL;
-}
-
-
-void DemoListTransmit2()
-{
-	InitListTransmit();
-}
-
-void DemoListTransmit()
-{
-	InitListTransmit();
-
-	ListTransmit* item1 = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item1->packet_id = 5;
-	AddItemPriorityFirst(item1);
-
-	ListTransmit* item2 = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item2->packet_id = 7;
-	AddItemPriorityLeast(item2);
-
-	ListTransmit* item3 = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item3->packet_id = 8;
-	AddItemPriorityLeast(item3);
-
-
-
-	ListTransmit* item4 = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item4->packet_id = 9;
-	AddItemPriorityFirst(item4);
-
-
-
-
-	ListTransmit* item5 = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item5->packet_id = 0x0a;
-	AddItemPriorityLeast(item5);
-
-
-
-	ListTransmit* item6 = (ListTransmit*) malloc(sizeof(ListTransmit));
-	item6->packet_id = 0x0b;
-	AddItemPriorityFirst(item6);
-
-
-
-
-	while(1)
-	{
-
-		if (head_list_transmit != NULL)
-		{
-			SendItemToUart();
-		}
-
-
-		int t = 1;
-		t++;
-
-	}
-
-
-	int t = 1;
-	t++;
-
 }
 
