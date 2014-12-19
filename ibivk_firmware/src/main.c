@@ -18,6 +18,7 @@
 // библиотеки текущего проекта
 #include "list_transmit_struct.h"
 #include "list_bshv.h"
+#include "tmi_struct.h"
 
 // прототипы функций
 #include "list_transmit.h"
@@ -53,7 +54,13 @@ int main(void)
 	// инициализация очередь сообщений на выдачу в УАРТ
 	InitListTransmit();
 
+	// инициализировать начальные значения телеметрии ИБИВК
+	InitTmi();
+
+	RS485_send_tmi(&ibivk_tmi);
+
 	//TestFpga();
+
 
 	while(1)
 	{
