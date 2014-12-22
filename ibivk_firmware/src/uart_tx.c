@@ -42,7 +42,8 @@ static void AddServiceBytes(unsigned int data[], unsigned int n_data, unsigned i
 	for (i=0; i<n_data; i++)
 	{
 		UART2_SEND_BYTE_POLLING(data[i], &error);
-		if (error) { Uart2_ErrorDetected(error); }
+		//if (error) { Uart2_ErrorDetected(error); }
+		Uart2_Selftest(error);
 	}
 }
 
@@ -139,36 +140,43 @@ void RS485_send_tmi(Tmi* this_tmi)
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 1]  = (this_tmi->ver_pmo.pmo_mk_month);
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 2]  = (this_tmi->ver_pmo.pmo_mk_day);
 
-	// Самодиагностика ИБИВК
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 3]  = (this_tmi->ibivk_selftest.norma_ibivk 		<< 7)	|
-															    (this_tmi->ibivk_selftest.norma_uart 		<< 6)	|
-															    (this_tmi->ibivk_selftest.norma_mil1553 	<< 5)	|
-															    (this_tmi->ibivk_selftest.norma_1hz 		<< 4)	|
-															    (this_tmi->ibivk_selftest.norma_320ms 		<< 3)	|
-															    (this_tmi->ibivk_selftest.norma_system_bshv << 2);
-
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 4]  = (this_tmi->ibivk_selftest.algorithm_error_code);
-
 	// Системное время ИБИВК
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 5]  = (this_tmi->sys_bshv->fouryears);
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 6]  = (this_tmi->sys_bshv->day) >> 8;
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 7]  = (this_tmi->sys_bshv->day) >> 0;
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 8]  = (this_tmi->sys_bshv->hour);
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 9]  = (this_tmi->sys_bshv->minute);
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 10] = (this_tmi->sys_bshv->second);
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 3]  = (this_tmi->sys_bshv->fouryears);
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 4]  = (this_tmi->sys_bshv->day) >> 8;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 5]  = (this_tmi->sys_bshv->day) >> 0;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 6]  = (this_tmi->sys_bshv->hour);
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 7]  = (this_tmi->sys_bshv->minute);
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 8]  = (this_tmi->sys_bshv->second);
 
-	// Ресурсы ИБИВК
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 11] = (this_tmi->ibivk_res.n_loaded_messages) >> 8;
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 12] = (this_tmi->ibivk_res.n_loaded_messages) >> 0;
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 13] = (this_tmi->ibivk_res.load_percent);
+	// Интегральные параметры самодиагностики ИБИВК
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 9]  = (this_tmi->integral_params.norma_ibivk 			<< 7)	|
+															    (this_tmi->integral_params.norma_uart 			<< 6)	|
+															    (this_tmi->integral_params.norma_mil1553 		<< 5)	|
+															    (this_tmi->integral_params.norma_input_signals 	<< 4)	|
+															    (this_tmi->integral_params.norma_software 		<< 3)	|
+															    (this_tmi->integral_params.norma_resources 		<< 2);
 
 	// Самодиагностика УАРТ
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 14] = (this_tmi->uart_selftest.uart1_error_code << 5)	|
-															    (this_tmi->uart_selftest.uart2_error_code << 2);
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 10] = (this_tmi->selftest_uart.uart1_error_code 		<< 5)	|
+															    (this_tmi->selftest_uart.uart2_error_code 		<< 2);
 
 	// Самодиагностика ядра МКИО
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 15] = (this_tmi->core1553_selftest.core1553_error_code) >> 8;
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 16] = (this_tmi->core1553_selftest.core1553_error_code) >> 0;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 11] = (this_tmi->selftest_core1553.core1553_error_code) >> 8;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 12] = (this_tmi->selftest_core1553.core1553_error_code) >> 0;
+
+	// Самодиагностика входных сигналов
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 13] = (this_tmi->selftest_input_signals.norma_1hz		 		<< 7) |
+															    (this_tmi->selftest_input_signals.norma_320ms	 	 	<< 6) |
+    															(this_tmi->selftest_input_signals.norma_digital_bshv	<< 5);
+
+	// Самодиагностика программного обеспечения
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 14] = (this_tmi->selftest_software.algorithm_error_code);
+
+	// Самодиагностика ресурсов
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 15] = (this_tmi->selftest_resources.n_loaded_messages)  >> 8;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 16] = (this_tmi->selftest_resources.n_loaded_messages)  >> 0;
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 17] = (this_tmi->selftest_resources.load_percent);
+
 	// - - - - - - - - - - - - - - - -
 
 	// Добавить слежубные байты

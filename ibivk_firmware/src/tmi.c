@@ -10,6 +10,46 @@
 
 Tmi ibivk_tmi;
 
+void UpdateIntegralParams()
+{
+	// формирование интегрального признака Норма УАРТ
+	if ((ibivk_tmi.selftest_uart.uart1_error_code == 0) && (ibivk_tmi.selftest_uart.uart2_error_code == 0))
+	{ ibivk_tmi.integral_params.norma_uart = NORMAL; }
+	else
+	{ ibivk_tmi.integral_params.norma_uart = NOT_NORMAL; }
+
+	// формирование интегрального признака Норма ядра 1553
+	if (ibivk_tmi.selftest_core1553.core1553_error_code == 0)
+	{ ibivk_tmi.integral_params.norma_mil1553 = NORMAL; }
+	else
+	{ ibivk_tmi.integral_params.norma_mil1553 = NOT_NORMAL; }
+
+	// формирование интегрального признака Норма входных сигналов
+	if ((ibivk_tmi.selftest_input_signals.norma_1hz) && (ibivk_tmi.selftest_input_signals.norma_320ms) && (ibivk_tmi.selftest_input_signals.norma_digital_bshv))
+	{ ibivk_tmi.integral_params.norma_input_signals = NORMAL; }
+	else
+	{ ibivk_tmi.integral_params.norma_input_signals = NOT_NORMAL; }
+
+	// формирование интегрального признака Норма программного обеспечения
+	if (ibivk_tmi.selftest_software.algorithm_error_code == 0)
+	{ ibivk_tmi.integral_params.norma_software = NORMAL; }
+	else
+	{ ibivk_tmi.integral_params.norma_software = NOT_NORMAL; }
+
+	// формирование интегрального признака Норма использования ресурсов
+	if ((ibivk_tmi.selftest_resources.load_percent < MAX_PERCENT_LOADED) && (ibivk_tmi.selftest_resources.n_loaded_messages <= MAX_NUMBER_OF_MESSAGES_LOADED))
+	{ ibivk_tmi.integral_params.norma_resources = NORMAL; }
+	else
+	{ ibivk_tmi.integral_params.norma_resources = NOT_NORMAL; }
+
+	// формирование интегрального признака Норма ИБИВК
+	ibivk_tmi.integral_params.norma_ibivk  = ibivk_tmi.integral_params.norma_uart 			||
+			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_mil1553		||
+			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_input_signals	||
+			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_software		||
+			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_resources;
+}
+
 void InitTmi()
 {
 	// установить версию ПМО
@@ -17,32 +57,54 @@ void InitTmi()
 	ibivk_tmi.ver_pmo.pmo_mk_month 					= VER_PMO_MK_MONTH;
 	ibivk_tmi.ver_pmo.pmo_mk_day 					= VER_PMO_MK_DAY;
 
-	// установить признаки самотестирования ИБИВК в отрицательные значения
-	ibivk_tmi.ibivk_selftest.norma_ibivk 			= NOT_NORMAL;
-	ibivk_tmi.ibivk_selftest.norma_uart 			= NOT_NORMAL;
-	ibivk_tmi.ibivk_selftest.norma_1hz 				= NOT_NORMAL;
-	ibivk_tmi.ibivk_selftest.norma_320ms 			= NOT_NORMAL;
-	ibivk_tmi.ibivk_selftest.norma_mil1553 			= NOT_NORMAL;
-	ibivk_tmi.ibivk_selftest.norma_system_bshv 		= NOT_NORMAL;
-	ibivk_tmi.ibivk_selftest.algorithm_error_code 	= NO_ALGORITHM_ERROR;
-
 	// установить указатель в телеметрии на системное время БШВ
 	ibivk_tmi.sys_bshv = &system_bshv;
 
-	// установить значения использованных ресурсов ИБИВК
-	ibivk_tmi.ibivk_res.n_loaded_messages = 0;
-	ibivk_tmi.ibivk_res.load_percent = 0;
+	// инициализировать параметры самотестирвоания УАРТ
+	ibivk_tmi.selftest_uart.uart1_error_code = 0;
+	ibivk_tmi.selftest_uart.uart2_error_code = 0;
 
-	// установить значения самодиагностики УАРТ
-	ibivk_tmi.uart_selftest.uart1_error_code = 0;
-	ibivk_tmi.uart_selftest.uart2_error_code = 0;
+	// инициализировать параметры самотестирвоания ядра 1553
+	ibivk_tmi.selftest_core1553.core1553_error_code = 0;
 
-	// установить значения самодиагностики ядра МКИО
-	ibivk_tmi.core1553_selftest.core1553_error_code = 0;
+	// инициализировать параметры самотестирвоания входных сигналов
+	ibivk_tmi.selftest_input_signals.norma_1hz = NOT_NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_320ms = NOT_NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_digital_bshv = NORMAL;
+
+	// инициализировать параметры самотестирвоания программного обеспечения
+	ibivk_tmi.selftest_software.algorithm_error_code = 0;
+
+	// инициализировать параметры использования ресурсов
+	ibivk_tmi.selftest_resources.load_percent = 0;
+	ibivk_tmi.selftest_resources.n_loaded_messages = 0;
+
+	// установить интергальные признаки
+	UpdateIntegralParams();
 }
 
-
-void UpdateTmi()
+void InitCleanTmi()
 {
+	// очистить параметры самотестирвоания УАРТ
+	ibivk_tmi.selftest_uart.uart1_error_code = 0;
+	ibivk_tmi.selftest_uart.uart2_error_code = 0;
 
+	// очистить параметры самотестирвоания ядра 1553
+	ibivk_tmi.selftest_core1553.core1553_error_code = 0;
+
+	// инициализировать параметры самотестирвоания входных сигналов
+	ibivk_tmi.selftest_input_signals.norma_1hz = NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_320ms = NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_digital_bshv = NORMAL;
+
+	// инициализировать параметры самотестирвоания программного обеспечения
+	ibivk_tmi.selftest_software.algorithm_error_code = 0;
+
+	// инициализировать параметры использования ресурсов
+	ibivk_tmi.selftest_resources.load_percent = 0;
+	ibivk_tmi.selftest_resources.n_loaded_messages = 0;
+
+	// установить интергальные признаки
+	UpdateIntegralParams();
 }
+

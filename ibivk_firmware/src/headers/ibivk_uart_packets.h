@@ -48,7 +48,7 @@ enum Packets_Data_Bytecount
 	 BYTECOUNT_PACKET_BC_TO_RT_UPPER 	= (bshv_byte_size + commandword_byte_size + 32*2),
 	 BYTECOUNT_PACKET_RT_TO_BC 			= (bshv_byte_size + 1*2),
 	 BYTECOUNT_DIAGNOSTIC_ANSWER 		= (3),
-	 BYTECOUNT_TMI 						= (17),
+	 BYTECOUNT_TMI 						= (20),
 	 SERVICE_BYTES_LENGTH = (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + CONTROLSUM_SIZE),
  };
 
@@ -63,8 +63,8 @@ enum DiagnosticAnswerErrorCodes
 	 DIAGNOSTIC_ANSWER_ERROR_CW_WORDCOUNT	= 0x05,			// "Ошибка: несовпадение количества СД, указанных в КС, с переданными в ИБИВК"
 	 DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY	= 0x06,			// "Ошибка: значение БШВ выходит за допустимые границы"
 	 DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE	= 0x07,			// "Ошибка: время, указанное в пакете, превышает защитный интервал"
-	 DIAGNOSTIC_ANSWER_ERROR_POINTERS		= 0x08,			// "Ошибка адресации"
-	 DIAGNOSTIC_ANSWER_ERROR_ALARM		= 0x09,			// "Ошибка адресации"
+	 //DIAGNOSTIC_ANSWER_ERROR_POINTERS		= 0x08,			// "Ошибка адресации"
+	 //DIAGNOSTIC_ANSWER_ERROR_ALARM		= 0x09,			// "Ошибка адресации"
  };
 
 #endif /* IBIVK_UART_PACKETS_H_ */

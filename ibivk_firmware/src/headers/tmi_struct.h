@@ -10,6 +10,9 @@
 
 #include "bshv_struct.h"
 
+#define MAX_NUMBER_OF_MESSAGES_LOADED		30000
+#define MAX_PERCENT_LOADED					99
+
 enum _VersionPmoData
  {
 	 VER_PMO_MK_YEAR 	= 14,
@@ -19,8 +22,8 @@ enum _VersionPmoData
 
 enum _NormaTmi
  {
-	 NORMAL 			= 1,
-	 NOT_NORMAL 		= 0,
+	 NORMAL 			= 0,
+	 NOT_NORMAL 		= 1,
  };
 
 typedef struct _VersionPmo
@@ -30,22 +33,15 @@ typedef struct _VersionPmo
 	unsigned char pmo_mk_day;
 }VersionPmo;
 
-typedef struct _IbivkSelftest
+typedef struct _IntegralParams
 {
 	unsigned char norma_ibivk;
 	unsigned char norma_uart;
 	unsigned char norma_mil1553;
-	unsigned char norma_1hz;
-	unsigned char norma_320ms;
-	unsigned char norma_system_bshv;
-	unsigned char algorithm_error_code;
-}IbivkSelftest;
-
-typedef struct _IbivkResources
-{
-	unsigned short n_loaded_messages;
-	unsigned char load_percent;
-}IbivkResources;
+	unsigned char norma_input_signals;
+	unsigned char norma_software;
+	unsigned char norma_resources;
+}IntegralParams;
 
 typedef struct _SelftestUart
 {
@@ -58,14 +54,35 @@ typedef struct _SelftestCore1553
 	unsigned short core1553_error_code;
 }SelftestCore1553;
 
+typedef struct _InputSignals
+{
+	unsigned char norma_1hz;
+	unsigned char norma_320ms;
+	unsigned char norma_digital_bshv;
+}SelftestSignals;
+
+typedef struct _SelftestSoftware
+{
+	unsigned char algorithm_error_code;
+}SelftestSoftware;
+
+
+typedef struct _IbivkResources
+{
+	unsigned short n_loaded_messages;
+	unsigned char load_percent;
+}SelftestResources;
+
 typedef struct _Tmi
 {
 	VersionPmo ver_pmo;
-	IbivkSelftest ibivk_selftest;
 	Bshv* sys_bshv;
-	IbivkResources ibivk_res;
-	SelftestUart uart_selftest;
-	SelftestCore1553 core1553_selftest;
+	IntegralParams integral_params;
+	SelftestUart selftest_uart;
+	SelftestCore1553 selftest_core1553;
+	SelftestSignals selftest_input_signals;
+	SelftestSoftware selftest_software;
+	SelftestResources selftest_resources;
 }Tmi;
 
 extern Tmi ibivk_tmi;
