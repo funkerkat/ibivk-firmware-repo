@@ -25,7 +25,7 @@ void UpdateIntegralParams()
 	{ ibivk_tmi.integral_params.norma_mil1553 = NOT_NORMAL; }
 
 	// формирование интегрального признака Норма входных сигналов
-	if ((ibivk_tmi.selftest_input_signals.norma_1hz) && (ibivk_tmi.selftest_input_signals.norma_320ms) && (ibivk_tmi.selftest_input_signals.norma_digital_bshv))
+	if ((ibivk_tmi.selftest_input_signals.norma_1hz == 0) && (ibivk_tmi.selftest_input_signals.norma_320ms == 0) && (ibivk_tmi.selftest_input_signals.norma_digital_bshv == 0))
 	{ ibivk_tmi.integral_params.norma_input_signals = NORMAL; }
 	else
 	{ ibivk_tmi.integral_params.norma_input_signals = NOT_NORMAL; }
@@ -53,9 +53,9 @@ void UpdateIntegralParams()
 void InitTmi()
 {
 	// установить версию ПМО
-	ibivk_tmi.ver_pmo.pmo_mk_year 					= VER_PMO_MK_YEAR;
-	ibivk_tmi.ver_pmo.pmo_mk_month 					= VER_PMO_MK_MONTH;
-	ibivk_tmi.ver_pmo.pmo_mk_day 					= VER_PMO_MK_DAY;
+	ibivk_tmi.ver_pmo.pmo_mk_year 			= VER_PMO_MK_YEAR;
+	ibivk_tmi.ver_pmo.pmo_mk_month 			= VER_PMO_MK_MONTH;
+	ibivk_tmi.ver_pmo.pmo_mk_day 			= VER_PMO_MK_DAY;
 
 	// установить указатель в телеметрии на системное время БШВ
 	ibivk_tmi.sys_bshv = &system_bshv;
@@ -68,8 +68,8 @@ void InitTmi()
 	ibivk_tmi.selftest_core1553.core1553_error_code = 0;
 
 	// инициализировать параметры самотестирвоания входных сигналов
-	ibivk_tmi.selftest_input_signals.norma_1hz = NOT_NORMAL;
-	ibivk_tmi.selftest_input_signals.norma_320ms = NOT_NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_1hz = NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_320ms = NORMAL;
 	ibivk_tmi.selftest_input_signals.norma_digital_bshv = NORMAL;
 
 	// инициализировать параметры самотестирвоания программного обеспечения
@@ -83,7 +83,7 @@ void InitTmi()
 	UpdateIntegralParams();
 }
 
-void InitCleanTmi()
+void CleanTmi()
 {
 	// очистить параметры самотестирвоания УАРТ
 	ibivk_tmi.selftest_uart.uart1_error_code = 0;

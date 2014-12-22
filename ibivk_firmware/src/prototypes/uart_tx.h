@@ -9,8 +9,10 @@
 #define UART_TX_H_
 
 #include "bshv_struct.h"
+#include "tmi_struct.h"
 
 void DiagnosticAnswer(unsigned int received_id, unsigned int received_cs, unsigned int error_code);
+void RS485_send_tmi(Tmi* this_tmi);
 void IbivkToPcMessageF1(BshvExtention bshv_ext, unsigned short cw, unsigned short sw);
 void IbivkToPcMessageF2(BshvExtention bshv_ext, unsigned short cw, unsigned short sw, unsigned short dw[]);
 

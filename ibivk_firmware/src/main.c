@@ -51,13 +51,13 @@ int main(void)
 
 	InitListBshv();
 
-	// инициализация очередь сообщений на выдачу в УАРТ
+	// инициализация очереди сообщений на выдачу в УАРТ
 	InitListTransmit();
 
 	// инициализировать начальные значения телеметрии ИБИВК
 	InitTmi();
 
-	RS485_send_tmi(&ibivk_tmi);
+	//RS485_send_tmi(&ibivk_tmi);
 
 	//TestFpga();
 

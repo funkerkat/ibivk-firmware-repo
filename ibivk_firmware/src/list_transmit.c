@@ -69,6 +69,14 @@ void SendItemToUart()
 							   item->data.data_diagnostic_answer.code_error);
 			break;
 
+
+		case ID_PACKET_IBIVK_TO_PC_TM:
+			RS485_send_tmi(item->data.data_tmi.p_tmi);
+			// очистить телеметрию
+			CleanTmi();
+			break;
+
+
 		case ID_PACKET_IBIVK_TO_PC_F1:
 			IbivkToPcMessageF1(item->data.data_ibivk_to_pc_f1.myBshvExtenion,
 							   item->data.data_ibivk_to_pc_f1.command_word,
@@ -96,6 +104,10 @@ void AddItemToListTransmit(ListTransmit* item)
 	switch(item->packet_id)
 	{
 		case ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER:
+			AddItemPriorityFirst(item);
+			break;
+
+		case ID_PACKET_IBIVK_TO_PC_TM:
 			AddItemPriorityFirst(item);
 			break;
 
