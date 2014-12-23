@@ -47,7 +47,8 @@ void UpdateIntegralParams()
 			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_mil1553		||
 			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_input_signals	||
 			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_software		||
-			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_resources;
+			 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_resources		||
+	 	 	 	 	 	 	 	 	 	 	 ibivk_tmi.integral_params.norma_fpga;
 }
 
 void InitTmi()
@@ -59,6 +60,9 @@ void InitTmi()
 
 	// установить указатель в телеметрии на системное время БШВ
 	ibivk_tmi.sys_bshv = &system_bshv;
+
+	// норма ПЛИС
+	ibivk_tmi.integral_params.norma_fpga = NORMAL;
 
 	// инициализировать параметры самотестирвоания УАРТ
 	ibivk_tmi.selftest_uart.uart1_error_code = 0;

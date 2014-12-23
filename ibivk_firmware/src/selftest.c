@@ -18,7 +18,15 @@
 
 // прототипы функций
 #include "tmi.h"
+#include "fpga_ibivk.h"
 
+void InitSelftest()
+{
+	// первичное самотестирование ПЛИС
+	unsigned int fpga_selftest_result = InitSelftestFpga();
+	if (fpga_selftest_result == EXIT_SUCCESS) 	{ ibivk_tmi.integral_params.norma_ibivk = NORMAL; }
+	else 										{ ibivk_tmi.integral_params.norma_ibivk = NOT_NORMAL; }
+}
 
 void SendTmi()
 {
@@ -39,9 +47,6 @@ static void SendTmiNotNormal()
 	{
 	    SendTmi();
 	}
-
-	int t = 1;
-	t++;
 }
 
 void Uart1_Selftest(unsigned int error_detected)

@@ -9,5 +9,6 @@
 #define SELFTEST_H_
 
 void Uart2_ErrorDetected(unsigned int);
+void InitSelftest();
 
 #endif /* SELFTEST_H_ */

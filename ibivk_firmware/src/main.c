@@ -10,12 +10,7 @@
 
 // библиотеки для работы с периферией
 #include "xSystem.h"
-
-#include "xMil1553BC.h"
 #include "xIrqmp.h"
-#include "xUart.h"
-#include "xTimer.h"
-#include "xGrgpio.h"
 
 // библиотеки текущего проекта
 #include "list_transmit_struct.h"
@@ -23,10 +18,18 @@
 // прототипы функций
 #include "list_transmit.h"
 #include "init.h"
+#include "selftest.h"
 
 int main(void)
 {
+	// инициализация микроконтроллера
 	InitIbivk();
+
+	// первичное самотестирование
+	InitSelftest();
+
+	// разрешение прерываний
+	IRQMP_ENABLE();
 
 	while(1)
 	{

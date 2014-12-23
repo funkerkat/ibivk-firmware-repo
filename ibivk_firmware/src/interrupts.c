@@ -44,14 +44,8 @@ void Handler_irq_3()
 void Handler_irq_4()
 {
 	// IRQMP_320MS
-
 	ReadBshvFromFPGA();
 	IncrementBshvCorrectionAvailable(&bshv_prev);
-
-	//SendTmi();
-
-	int t = 0;
-	t++;
 }
 
 void Handler_irq_5()

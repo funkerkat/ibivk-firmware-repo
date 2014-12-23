@@ -41,6 +41,7 @@ typedef struct _IntegralParams
 	unsigned char norma_input_signals;
 	unsigned char norma_software;
 	unsigned char norma_resources;
+	unsigned char norma_fpga;
 }IntegralParams;
 
 typedef struct _SelftestUart
