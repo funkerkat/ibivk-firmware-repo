@@ -15,6 +15,7 @@
 
 // прототипы функций
 #include "uart_tx.h"
+#include "tmi.h"
 
 ListTransmit* head_list_transmit;
 
