@@ -31,11 +31,20 @@ extern Bshv system_bshv;
 // глобальная переменная -- признак коррекции
 extern unsigned int bshv_correction;
 
+// глобальная переменная -- БШВ, которое после ближайшего импульса 1 Гц будет установлено как системное
+extern Bshv bshv_prev;
+
 enum BshvCorrectionCodes
  {
 	 CORRECTIOM_DISABLED 	= 0,
 	 CORRECTIOM_PLUS_1S 	= 1,
 	 CORRECTIOM_MINUS_1S 	= 2,
+ };
+
+enum BshvCorrectionTime
+ {
+	 CORRECTION_HOUR 	= 2,
+	 CORRECTION_MINUTE 	= 59,
  };
 
 enum BshvBoundary

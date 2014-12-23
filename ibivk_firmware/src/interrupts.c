@@ -13,6 +13,7 @@
 #include "xGrgpio.h"
 
 // библиотеки текущего проекта
+#include "bshv_struct.h"
 
 // прототипы функций
 #include "timer.h"
@@ -44,7 +45,10 @@ void Handler_irq_4()
 {
 	// IRQMP_320MS
 
-	//ReadSystemBshv();
+	ReadBshvFromFPGA();
+	IncrementBshvCorrectionAvailable(&bshv_prev);
+
+	//SendTmi();
 
 	int t = 0;
 	t++;
@@ -109,9 +113,13 @@ void Handler_irq_14()
 
 void Handler_irq_15()
 {
+	// установить новое системное время
+	CopyBshv(&bshv_prev, &system_bshv);
 
-	int t = 0;
-	t++;
+	// перейти к обработке сообщений
+	HertzHandler();
+
+	SendTmi();
 }
 
 // ----- External Interrupts (GPIO) -----

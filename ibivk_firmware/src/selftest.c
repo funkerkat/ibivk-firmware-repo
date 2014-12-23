@@ -20,21 +20,24 @@
 #include "tmi.h"
 
 
+void SendTmi()
+{
+    // Выдать телеметрический пакет в УАРТ:
+    // 1. выделить память для хранения данных для последующей выдачи в УАРТ
+    ListTransmit *item = (ListTransmit*)malloc(sizeof (ListTransmit));
+    // 2. скопировать данные
+    item->packet_id = ID_PACKET_IBIVK_TO_PC_TM;
+    item->data.data_tmi.p_tmi = &ibivk_tmi;
+    // 3. отправить на хранения данные (до наступления очереди выдачи в УАРТ)
+    AddItemToListTransmit(item);
+}
+
 static void SendTmiNotNormal()
 {
 	UpdateIntegralParams();
 	if (ibivk_tmi.integral_params.norma_ibivk == NOT_NORMAL)
 	{
-		// Выдать телеметрический пакет в УАРТ:
-		// 1. выделить память для хранения данных для последующей выдачи в УАРТ
-		ListTransmit* item = (ListTransmit*) malloc(sizeof(ListTransmit));
-
-		// 2. скопировать данные
-		item->packet_id = ID_PACKET_IBIVK_TO_PC_TM;
-		item->data.data_tmi.p_tmi = &ibivk_tmi;
-
-		// 3. отправить на хранения данные (до наступления очереди выдачи в УАРТ)
-		AddItemToListTransmit(item);
+	    SendTmi();
 	}
 
 	int t = 1;

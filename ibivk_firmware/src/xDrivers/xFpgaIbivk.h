@@ -45,6 +45,7 @@
 
 #define FPGA_IBIVK_INIT()													\
 {																			\
+	FPGA_IBIVK_SOFTWARE_RESET();											\
 	*((int*)(FPGA_IBIVK_BASE_ADDRESS + FPGA_IBIVK_IBSU_COM)) = IBSU_COM;	\
 }
 

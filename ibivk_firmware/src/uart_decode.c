@@ -140,7 +140,7 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	Bshv packet_bshv = packet_bshv_ext.myBshv;;
 	Bshv bshv_min_value;
 	CopyBshv(&system_bshv, &bshv_min_value);
-	int k; for (k=0; k<GUARD_TIME_SECONDS; k++) { IncrementBshv(&bshv_min_value); }
+	int k; for (k=0; k<GUARD_TIME_SECONDS; k++) { IncrementBshv(&bshv_min_value, 59); }
 	int result_guard_interval = CompareBshv(&packet_bshv, &bshv_min_value);
 	if (result_guard_interval == FirstValueIsLess)
 	{
@@ -217,7 +217,7 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	Bshv packet_bshv = packet_bshv_ext.myBshv;;
 	Bshv bshv_min_value;
 	CopyBshv(&system_bshv, &bshv_min_value);
-	int k; for (k=0; k<GUARD_TIME_SECONDS; k++) { IncrementBshv(&bshv_min_value); }
+	int k; for (k=0; k<GUARD_TIME_SECONDS; k++) { IncrementBshv(&bshv_min_value, 59); }
 	int result_guard_interval = CompareBshv(&packet_bshv, &bshv_min_value);
 	if (result_guard_interval == FirstValueIsLess)
 	{

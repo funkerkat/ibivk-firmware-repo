@@ -25,7 +25,7 @@
 #define DIR_GPIO1				(OUTPUT << 1)
 #define DIR_GPIO2				(OUTPUT << 2)
 #define DIR_GPIO3				(OUTPUT << 3)
-#define DIR_GPIO4				(INPUT << 4)
+#define DIR_GPIO4				(INPUT  << 4)	// 320 ms
 #define DIR_GPIO5				(OUTPUT << 5)
 #define DIR_GPIO6				(OUTPUT << 6)
 #define DIR_GPIO7				(OUTPUT << 7)
@@ -33,10 +33,10 @@
 #define DIR_GPIO9				(OUTPUT << 9)
 #define DIR_GPIO10				(OUTPUT << 10)
 #define DIR_GPIO11				(OUTPUT << 11)
-#define DIR_GPIO12				(OUTPUT  << 12)
+#define DIR_GPIO12				(OUTPUT << 12)
 #define DIR_GPIO13				(OUTPUT << 13)
 #define DIR_GPIO14				(OUTPUT << 14)
-#define DIR_GPIO15				(INPUT << 15)
+#define DIR_GPIO15				(INPUT  << 15)	// 1 Hz
 #define DIRECTION_GPIO (DIR_GPIO0|DIR_GPIO1|DIR_GPIO2|DIR_GPIO3|		\
 						DIR_GPIO4|DIR_GPIO5|DIR_GPIO6|DIR_GPIO7|		\
 						DIR_GPIO8|DIR_GPIO9|DIR_GPIO10|DIR_GPIO11|		\
@@ -114,7 +114,7 @@
 #define EDGE_GPIO12				(EDGE << 12)
 #define EDGE_GPIO13				(EDGE << 13)
 #define EDGE_GPIO14				(EDGE << 14)
-#define EDGE_GPIO15				(EDGE << 15)		// 1 Hz
+#define EDGE_GPIO15				(EDGE << 15)	// 1 Hz
 #define EDGE_GPIO 	  (EDGE_GPIO0|EDGE_GPIO1|EDGE_GPIO2|EDGE_GPIO3|			\
 					   EDGE_GPIO4|EDGE_GPIO5|EDGE_GPIO6|EDGE_GPIO7|			\
 					   EDGE_GPIO8|EDGE_GPIO9|EDGE_GPIO10|EDGE_GPIO11|		\

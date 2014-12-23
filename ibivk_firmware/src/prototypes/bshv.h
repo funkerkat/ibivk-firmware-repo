@@ -8,8 +8,9 @@
 #ifndef BSHV_H_
 #define BSHV_H_
 
+void InitSystemBshv();
 result_type CompareBshv(Bshv* first_value, Bshv* second_value);
 void CopyBshv(Bshv* copyFrom, Bshv* copyTo);
-void IncrementBshv(Bshv* myBshv);
+void IncrementBshv(Bshv* myBshv, unsigned int second_value);
 
 #endif /* BSHV_H_ */

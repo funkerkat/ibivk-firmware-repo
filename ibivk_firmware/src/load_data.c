@@ -19,11 +19,12 @@
 
 // прототипы функций
 #include "list_microseconds.h"
+#include "list_bshv.h"
 
 int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 {
-	HertzHandler();
-	/*
+	//HertzHandler();
+
 	// выделить память в куче под данные МКИО
 	EntryCore1553* p_entry = (EntryCore1553*) malloc(sizeof(EntryCore1553));
 	Load1553MessageF1(p_entry, cw, dw);
@@ -36,7 +37,7 @@ int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 
 	// Добавить текущую микросекунду в список микросекунд
 	AddNodeMicrosecondItem(&(thisNodeBshv->ptr), p_entry, b->microsecond, thisNodeBshv);
-*/
+
 	return EXIT_SUCCESS;
 }
 

@@ -16,7 +16,14 @@ unsigned int bshv_correction;
 
 void InitSystemBshv()
 {
+	// значение, которое необходимо установить как системное время с ближайшего импульса 1 Гц
+	bshv_prev.fouryears = 0;
+	bshv_prev.day = 0;
+	bshv_prev.hour = 0;
+	bshv_prev.minute = 0;
+	bshv_prev.second = 0;
 
+	// системное время ИБИВК
 	system_bshv.fouryears = 1;
 	system_bshv.day = 15;
 	system_bshv.hour = 23;
@@ -42,29 +49,8 @@ void CopyBshv(Bshv* copyFrom, Bshv* copyTo)
 	copyTo->second 		= copyFrom->second;
 }
 
-void IncrementBshv(Bshv* myBshv)
+void IncrementBshv(Bshv* myBshv, unsigned int second_value)
 {
-	unsigned int second_value;
-
-	switch(bshv_correction)
-	{
-		case CORRECTIOM_DISABLED:
-			second_value = 59;
-			break;
-
-		case CORRECTIOM_PLUS_1S:
-			second_value = 60;
-			break;
-
-		case CORRECTIOM_MINUS_1S:
-			second_value = 58;
-			break;
-
-		default:
-			// алгоритмическая ошибка
-			break;
-	}
-
 	if (myBshv->second < second_value) 						{ (myBshv->second)++; return; }
 	else 													{ (myBshv->second) = 0; }
 
@@ -79,6 +65,31 @@ void IncrementBshv(Bshv* myBshv)
 
 	if (myBshv->fouryears < BSHV_FOURYEARS_UPPER_BOUNDARY) 	{ (myBshv->fouryears)++; return; }
 	else 													{ (myBshv->second) = 0; (myBshv->minute) = 0; (myBshv->hour) = 0; (myBshv->day) = 0; (myBshv->fouryears) = 0; }
+}
+
+void IncrementBshvCorrectionAvailable(Bshv* myBshv)
+{
+	if ((bshv_correction == CORRECTIOM_DISABLED) || (myBshv->hour != CORRECTION_HOUR) || (myBshv->minute != CORRECTION_MINUTE))
+	{
+		IncrementBshv(myBshv, 59);
+	}
+	else
+	{
+		switch(bshv_correction)
+		{
+			case CORRECTIOM_PLUS_1S:
+				IncrementBshv(myBshv, 60);
+				break;
+
+			case CORRECTIOM_MINUS_1S:
+				IncrementBshv(myBshv, 58);
+				break;
+
+			default:
+				// алгоритмическая ошибка
+				break;
+		}
+	}
 }
 
 result_type CompareBshv(Bshv* first_value, Bshv* second_value)

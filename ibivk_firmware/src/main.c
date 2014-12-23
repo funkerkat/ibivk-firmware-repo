@@ -9,56 +9,24 @@
  */
 
 // библиотеки для работы с периферией
+#include "xSystem.h"
+
 #include "xMil1553BC.h"
 #include "xIrqmp.h"
-#include "xTimer.h"
 #include "xUart.h"
+#include "xTimer.h"
 #include "xGrgpio.h"
 
 // библиотеки текущего проекта
 #include "list_transmit_struct.h"
-#include "list_bshv.h"
-#include "tmi_struct.h"
 
 // прототипы функций
 #include "list_transmit.h"
-
-void DisableCache()
-{
-	asm("set 0, %g0");
-	asm("lda [%g0]2, %g1");
-	asm("and 0xFFFFFFF0, %g1, %g2");
-	asm("set 0x400000, %g4");
-	asm("or %g4, %g2, %g3");
-	asm("sta %g3, [%g0]2");
-}
+#include "init.h"
 
 int main(void)
 {
-	DisableCache();
-	CORE1553_SOFTWARE_RESET();
-	IRQMP_CLEAR();
-	InitInterruptHandlers();
-	// ------------------------
-	InitSystemBshv();		// ?
-
-	CORE1553_INIT();
-	TIMER_INIT();
-	UART_INIT(115200);
-	GRGPIO_INIT();
-	IRQMP_ENABLE();
-
-
-	InitListBshv();
-
-	// инициализация очереди сообщений на выдачу в УАРТ
-	InitListTransmit();
-
-	// инициализировать начальные значения телеметрии ИБИВК
-	InitTmi();
-
-	//TestFpga();
-
+	InitIbivk();
 
 	while(1)
 	{
@@ -68,3 +36,31 @@ int main(void)
 
 	return EXIT_SUCCESS;
 }
+
+
+
+/*
+DisableCache();
+CORE1553_SOFTWARE_RESET();
+IRQMP_CLEAR();
+InitInterruptHandlers();
+// ------------------------
+InitSystemBshv();		// ?
+
+CORE1553_INIT();
+TIMER_INIT();
+UART_INIT(115200);
+GRGPIO_INIT();
+IRQMP_ENABLE();
+
+
+InitListBshv();
+
+// инициализация очереди сообщений на выдачу в УАРТ
+InitListTransmit();
+
+// инициализировать начальные значения телеметрии ИБИВК
+InitTmi();
+
+//TestFpga();
+*/
