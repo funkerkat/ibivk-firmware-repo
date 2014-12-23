@@ -71,10 +71,6 @@ void Uart2_Selftest(unsigned int error_detected)
 
 void Core1553_Selftest(unsigned short core1553_pending)
 {
-	if (core1553_pending != 0)
-	{
-		ibivk_tmi.selftest_core1553.core1553_error_code = core1553_pending;
-		SendTmiNotNormal();
-	}
-
+	ibivk_tmi.selftest_core1553.core1553_error_code = core1553_pending;
+	SendTmiNotNormal();
 }

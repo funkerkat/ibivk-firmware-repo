@@ -28,6 +28,16 @@ typedef struct _BshvExtention
 // глобальная переменная -- системное время БШВ в приборе ИБИВК
 extern Bshv system_bshv;
 
+// глобальная переменная -- признак коррекции
+extern unsigned int bshv_correction;
+
+enum BshvCorrectionCodes
+ {
+	 CORRECTIOM_DISABLED 	= 0,
+	 CORRECTIOM_PLUS_1S 	= 1,
+	 CORRECTIOM_MINUS_1S 	= 2,
+ };
+
 enum BshvBoundary
  {
 	 BSHV_FOURYEARS_LOWER_BOUNDARY 		= 0,

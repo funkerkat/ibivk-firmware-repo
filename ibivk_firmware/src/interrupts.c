@@ -10,6 +10,10 @@
 #include "xIrqmp.h"
 #include "xMil1553BC.h"
 
+#include "xGrgpio.h"
+
+// библиотеки текущего проекта
+
 // прототипы функций
 #include "timer.h"
 #include "uart_rx.h"
@@ -96,8 +100,11 @@ void Handler_irq_13()
 
 void Handler_irq_14()
 {
-	unsigned short core1553_pending = *((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG04_PENDING_INTERRUPT));;
-	Core1553_Selftest(core1553_pending);
+	unsigned short core1553_pending = *((int*)(MIL1553_BASE_ADDRESS + MIL1553_REG04_PENDING_INTERRUPT));
+	if (core1553_pending != 0)
+	{
+		Core1553_Selftest(core1553_pending);
+	}
 }
 
 void Handler_irq_15()

@@ -13,6 +13,8 @@
 #include "xMil1553BC.h"
 #include "xTimer.h"
 
+#include "xGrgpio.h"
+
 // библиотеки текущего проекта
 #include "list_transmit_struct.h"
 #include "ibivk_uart_packets.h"
@@ -81,7 +83,7 @@ void ExecuteCore1553()
 		 // алгоритмическая ошибка
 	 }
 
-	 // 3. отправить на хранения данные (до наступления очереди выдачи в УАРТ)
+	 // 3. Выдать сообщение в УАРТ
 	 AddItemToListTransmit(item);
 
 	// Переключить указатель на следующее сообщение и удалить текущую запись из списка микросекунд

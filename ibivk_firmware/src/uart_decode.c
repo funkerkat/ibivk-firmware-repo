@@ -16,6 +16,7 @@
 // прототипы функций
 #include "list_transmit.h"
 #include "load_data.h"
+#include "bshv.h"
 
 static void GetBshvFromPacket(unsigned int data[], BshvExtention* packet_bshv)
 {
@@ -125,9 +126,9 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	}
 
 	// 2. Декодировать значение БШВ и проверить граничные значения БШВ
-	BshvExtention packet_bshv;
-	GetBshvFromPacket(data, &packet_bshv);
-	int bshv_result = ValidateBshvBoundaries(&packet_bshv);
+	BshvExtention packet_bshv_ext;
+	GetBshvFromPacket(data, &packet_bshv_ext);
+	int bshv_result = ValidateBshvBoundaries(&packet_bshv_ext);
 	if(bshv_result == EXIT_FAILURE)
 	{
 		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
@@ -135,12 +136,14 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 		return;
 	}
 
-	// 3. Сравнить БШВ с системным БШВ
-	//int bshv_guard_interval = CompareWithSystemBshv(&system_bshv, &packet_bshv);
-	int bshv_guard_interval = EXIT_SUCCESS;
-	if(bshv_guard_interval == EXIT_FAILURE)
+	// 3. Сравнить БШВ с системным БШВ (проверить, не устарел ли пакет)
+	Bshv packet_bshv = packet_bshv_ext.myBshv;;
+	Bshv bshv_min_value;
+	CopyBshv(&system_bshv, &bshv_min_value);
+	int k; for (k=0; k<GUARD_TIME_SECONDS; k++) { IncrementBshv(&bshv_min_value); }
+	int result_guard_interval = CompareBshv(&packet_bshv, &bshv_min_value);
+	if (result_guard_interval == FirstValueIsLess)
 	{
-		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
 		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
 		return;
 	}
@@ -173,7 +176,7 @@ static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
 	GetDataWordsFromPacket(data, n_datawords, data_shorts);
 
 	// 5. Загрузить в память ИБИВК
-	int load_result = LoadPacketF1(&packet_bshv, cw, data_shorts);
+	int load_result = LoadPacketF1(&packet_bshv_ext, cw, data_shorts);
 	if(load_result == EXIT_SUCCESS)
 	{
 		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);
@@ -200,9 +203,9 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	}
 
 	// 2. Декодировать значение БШВ и проверить граничные значения БШВ
-	BshvExtention packet_bshv;
-	GetBshvFromPacket(data, &packet_bshv);
-	int bshv_result = ValidateBshvBoundaries(&packet_bshv);
+	BshvExtention packet_bshv_ext;
+	GetBshvFromPacket(data, &packet_bshv_ext);
+	int bshv_result = ValidateBshvBoundaries(&packet_bshv_ext);
 	if(bshv_result == EXIT_FAILURE)
 	{
 		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
@@ -210,12 +213,14 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 		return;
 	}
 
-	// 3. Сравнить БШВ с системным БШВ
-	//int bshv_guard_interval = CompareWithSystemBshv(&system_bshv, &packet_bshv);
-	int bshv_guard_interval = EXIT_SUCCESS;
-	if(bshv_guard_interval == EXIT_FAILURE)
+	// 3. Сравнить БШВ с системным БШВ (проверить, не устарел ли пакет)
+	Bshv packet_bshv = packet_bshv_ext.myBshv;;
+	Bshv bshv_min_value;
+	CopyBshv(&system_bshv, &bshv_min_value);
+	int k; for (k=0; k<GUARD_TIME_SECONDS; k++) { IncrementBshv(&bshv_min_value); }
+	int result_guard_interval = CompareBshv(&packet_bshv, &bshv_min_value);
+	if (result_guard_interval == FirstValueIsLess)
 	{
-		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
 		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
 		return;
 	}
@@ -233,7 +238,7 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	}
 
 	// 4. Загрузить в память ИБИВК
-	int load_result = LoadPacketF2(&packet_bshv, cw);
+	int load_result = LoadPacketF2(&packet_bshv_ext, cw);
 	if(load_result == EXIT_SUCCESS)
 	{
 		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_NO_ERRORS);

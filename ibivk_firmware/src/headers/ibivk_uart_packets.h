@@ -10,6 +10,8 @@
 
 #define PACKET_LENGTH_MIN_VALUE		(2)			// минимальное кол-во байт в пакете = 2  (НП и КС)
 
+#define GUARD_TIME_SECONDS			(2)			// защитный интервал меджду БШВ, передаваемым в пакете, и системным БШВ ИБИВК
+
 enum HEAD_VALUES
  {
 	 HEAD_0 	= 0x42,

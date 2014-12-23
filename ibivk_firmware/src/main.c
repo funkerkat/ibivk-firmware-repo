@@ -57,8 +57,6 @@ int main(void)
 	// инициализировать начальные значения телеметрии ИБИВК
 	InitTmi();
 
-	//RS485_send_tmi(&ibivk_tmi);
-
 	//TestFpga();
 
 
@@ -66,8 +64,6 @@ int main(void)
 	{
 		// Если в очереди на выдачу в УАРТ есть элементы, осуществить выдачу
 		if (head_list_transmit != NULL) { SendItemToUart(); }
-
-
 	}
 
 	return EXIT_SUCCESS;
