@@ -50,7 +50,7 @@ enum Packets_Data_Bytecount
 	 BYTECOUNT_PACKET_BC_TO_RT_UPPER 	= (bshv_byte_size + commandword_byte_size + 32*2),
 	 BYTECOUNT_PACKET_RT_TO_BC 			= (bshv_byte_size + 1*2),
 	 BYTECOUNT_DIAGNOSTIC_ANSWER 		= (3),
-	 BYTECOUNT_TMI 						= (18),
+	 BYTECOUNT_TMI 						= (23),
 	 SERVICE_BYTES_LENGTH = (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + CONTROLSUM_SIZE),
  };
 

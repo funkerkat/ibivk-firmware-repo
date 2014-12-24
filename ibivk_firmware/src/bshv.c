@@ -67,7 +67,7 @@ void IncrementBshv(Bshv* myBshv, unsigned int second_value)
 	else 													{ (myBshv->second) = 0; (myBshv->minute) = 0; (myBshv->hour) = 0; (myBshv->day) = 0; (myBshv->fouryears) = 0; }
 }
 
-void IncrementBshvCorrectionAvailable(Bshv* myBshv)
+void PredictNextBshvValue(Bshv* myBshv)
 {
 	if ((bshv_correction == CORRECTIOM_DISABLED) || (myBshv->hour != CORRECTION_HOUR) || (myBshv->minute != CORRECTION_MINUTE))
 	{

@@ -15,9 +15,10 @@
 
 enum _VersionPmoData
  {
-	 VER_PMO_MK_YEAR 	= 14,
-	 VER_PMO_MK_MONTH 	= 12,
-	 VER_PMO_MK_DAY 	= 17,
+	 VER_PMO_MK_YEAR 		= 14,
+	 VER_PMO_MK_MONTH 		= 12,
+	 VER_PMO_MK_DAY 		= 17,
+	 VER_PMO_MK_REVISION	= 1,
  };
 
 enum _NormaTmi
@@ -28,9 +29,10 @@ enum _NormaTmi
 
 typedef struct _VersionPmo
 {
-	unsigned char pmo_mk_year;
-	unsigned char pmo_mk_month;
-	unsigned char pmo_mk_day;
+	unsigned char pmo_year;
+	unsigned char pmo_month;
+	unsigned char pmo_day;
+	unsigned char pmo_revision;
 }VersionPmo;
 
 typedef struct _IntegralParams
@@ -59,12 +61,12 @@ typedef struct _InputSignals
 {
 	unsigned char norma_1hz;
 	unsigned char norma_320ms;
-	unsigned char norma_digital_bshv;
+	unsigned char norma_range_bshv;
 }SelftestSignals;
 
 typedef struct _SelftestSoftware
 {
-	unsigned char algorithm_error_code;
+	unsigned char pmo_error_code;
 }SelftestSoftware;
 
 
@@ -76,7 +78,8 @@ typedef struct _IbivkResources
 
 typedef struct _Tmi
 {
-	VersionPmo ver_pmo;
+	VersionPmo ver_mk_pmo;
+	VersionPmo ver_fpga_pmo;
 	Bshv* sys_bshv;
 	IntegralParams integral_params;
 	SelftestUart selftest_uart;

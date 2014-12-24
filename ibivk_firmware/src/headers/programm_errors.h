@@ -1,16 +1,16 @@
 /*
- * algorithm_error_codes.h
+ * programm_errors.h
  *
- *  Created on: 19.12.2014
+ *  Created on: 24.12.2014
  *      Author: Ludmila
  */
 
-#ifndef ALGORITHM_ERROR_CODES_H_
-#define ALGORITHM_ERROR_CODES_H_
+#ifndef PROGRAMM_ERRORS_H_
+#define PROGRAMM_ERRORS_H_
 
-enum _AlgorithmErrorCodes
+enum PmoErrorCodes
 {
-	NO_ALGORITHM_ERROR 		= 0,
+	NO_PMO_ERROR 			= 0,
 	ALGORITHM_ERROR_CODE_1	= 1,
 	ALGORITHM_ERROR_CODE_2,
 	ALGORITHM_ERROR_CODE_3,
@@ -20,4 +20,4 @@ enum _AlgorithmErrorCodes
 	ALGORITHM_ERROR_CODE_7,
 };
 
-#endif /* ALGORITHM_ERROR_CODES_H_ */
+#endif /* PROGRAMM_ERRORS_H_ */

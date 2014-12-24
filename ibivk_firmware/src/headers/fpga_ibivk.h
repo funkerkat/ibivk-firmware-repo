@@ -9,5 +9,6 @@
 #define FPGA_IBIVK_H_
 
 unsigned int InitSelftestFpga();
+void GetVersionFpga(VersionPmo* ver);
 
 #endif /* FPGA_IBIVK_H_ */

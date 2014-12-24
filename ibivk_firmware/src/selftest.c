@@ -20,13 +20,7 @@
 #include "tmi.h"
 #include "fpga_ibivk.h"
 
-void InitSelftest()
-{
-	// первичное самотестирование ПЛИС
-	unsigned int fpga_selftest_result = InitSelftestFpga();
-	if (fpga_selftest_result == EXIT_SUCCESS) 	{ ibivk_tmi.integral_params.norma_ibivk = NORMAL; }
-	else 										{ ibivk_tmi.integral_params.norma_ibivk = NOT_NORMAL; }
-}
+
 
 void SendTmi()
 {
@@ -47,6 +41,23 @@ static void SendTmiNotNormal()
 	{
 	    SendTmi();
 	}
+}
+
+void InitSelftest()
+{
+	// первичное самотестирование ПЛИС
+	unsigned int fpga_selftest_result = InitSelftestFpga();
+	if (fpga_selftest_result == EXIT_SUCCESS) 	{ ibivk_tmi.integral_params.norma_fpga = NORMAL; }
+	else 										{ ibivk_tmi.integral_params.norma_fpga = NOT_NORMAL; }
+
+	// Если Норма ИБИВУ = ненорма, выдать телеметрию в УАРТ
+	SendTmiNotNormal();
+}
+
+void SetBshvRangeError()
+{
+	ibivk_tmi.selftest_input_signals.norma_range_bshv = NOT_NORMAL;
+	SendTmiNotNormal();
 }
 
 void Uart1_Selftest(unsigned int error_detected)
@@ -80,5 +91,11 @@ void Uart2_Selftest(unsigned int error_detected)
 void Core1553_Selftest(unsigned short core1553_pending)
 {
 	ibivk_tmi.selftest_core1553.core1553_error_code = core1553_pending;
+	SendTmiNotNormal();
+}
+
+void PmoSelftest(unsigned int error_code)
+{
+	ibivk_tmi.selftest_software.pmo_error_code = error_code;
 	SendTmiNotNormal();
 }
