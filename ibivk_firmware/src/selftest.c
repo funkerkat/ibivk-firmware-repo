@@ -60,6 +60,12 @@ void SetBshvRangeError()
 	SendTmiNotNormal();
 }
 
+void SetFpga32impulseError()
+{
+	ibivk_tmi.selftest_input_signals.norma_32_impulse = NOT_NORMAL;
+	SendTmiNotNormal();
+}
+
 void Uart1_Selftest(unsigned int error_detected)
 {
 	// есть ошибки

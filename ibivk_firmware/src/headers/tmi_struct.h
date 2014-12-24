@@ -62,6 +62,7 @@ typedef struct _InputSignals
 	unsigned char norma_1hz;
 	unsigned char norma_320ms;
 	unsigned char norma_range_bshv;
+	unsigned char norma_32_impulse;
 }SelftestSignals;
 
 typedef struct _SelftestSoftware

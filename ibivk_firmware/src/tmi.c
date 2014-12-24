@@ -36,7 +36,7 @@ void UpdateIntegralParams()
 	{ ibivk_tmi.integral_params.norma_mil1553 = NOT_NORMAL; }
 
 	// формирование интегрального признака Ќорма входных сигналов
-	if ((ibivk_tmi.selftest_input_signals.norma_1hz == 0) && (ibivk_tmi.selftest_input_signals.norma_320ms == 0) && (ibivk_tmi.selftest_input_signals.norma_range_bshv == 0))
+	if ((ibivk_tmi.selftest_input_signals.norma_1hz == 0) && (ibivk_tmi.selftest_input_signals.norma_320ms == 0) && (ibivk_tmi.selftest_input_signals.norma_range_bshv == 0) && (ibivk_tmi.selftest_input_signals.norma_32_impulse == 0))
 	{ ibivk_tmi.integral_params.norma_input_signals = NORMAL; }
 	else
 	{ ibivk_tmi.integral_params.norma_input_signals = NOT_NORMAL; }
@@ -95,6 +95,7 @@ void InitTmi()
 	ibivk_tmi.selftest_input_signals.norma_1hz = NORMAL;
 	ibivk_tmi.selftest_input_signals.norma_320ms = NORMAL;
 	ibivk_tmi.selftest_input_signals.norma_range_bshv = NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_32_impulse = NORMAL;
 
 	// инициализировать параметры самотестирвоани€ программного обеспечени€
 	ibivk_tmi.selftest_software.pmo_error_code = NO_PMO_ERROR;
@@ -120,6 +121,7 @@ void CleanTmi()
 	ibivk_tmi.selftest_input_signals.norma_1hz = NORMAL;
 	ibivk_tmi.selftest_input_signals.norma_320ms = NORMAL;
 	ibivk_tmi.selftest_input_signals.norma_range_bshv = NORMAL;
+	ibivk_tmi.selftest_input_signals.norma_32_impulse = NORMAL;
 
 	// инициализировать параметры самотестирвоани€ программного обеспечени€
 	ibivk_tmi.selftest_software.pmo_error_code = 0;

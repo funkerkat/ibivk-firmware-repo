@@ -173,10 +173,10 @@ void RS485_send_tmi(Tmi* this_tmi)
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 17] = (this_tmi->selftest_core1553.core1553_error_code) >> 0;
 
 	// Самодиагностика входных сигналов
-	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 18] = (this_tmi->selftest_input_signals.norma_1hz		 		<< 7) |
-															    (this_tmi->selftest_input_signals.norma_320ms	 	 	<< 6) |
-    															(this_tmi->selftest_input_signals.norma_range_bshv	<< 5);
-
+	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 18] = (this_tmi->selftest_input_signals.norma_1hz		 	<< 7) |
+															    (this_tmi->selftest_input_signals.norma_320ms	 	<< 6) |
+    															(this_tmi->selftest_input_signals.norma_range_bshv	<< 5) |
+																(this_tmi->selftest_input_signals.norma_32_impulse	<< 4);
 	// Самодиагностика программного обеспечения
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 19] = (this_tmi->selftest_software.pmo_error_code);
 

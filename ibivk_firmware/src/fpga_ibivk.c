@@ -62,6 +62,11 @@ void ReadBshvFromFPGA()
 	(bshv_prev.day)++;
 	(bshv_prev.fouryears)++;
 
+	// Проверка 32 импульсов оцифровки
+	unsigned int tm2 = *((int*)(FPGA_IBIVK_BASE_ADDRESS + FPGA_IBIVK_IBSU_TM2));
+	unsigned int norma_32_impulse = (tm2 >> 6) & 0x01;
+	if (norma_32_impulse == 0) { SetFpga32impulseError(); }
+
 	// Проверка значений на диапазон
 	if ((bshv_prev.second 		< BSHV_SECOND_LOWER_BOUNDARY) 	||
 		(bshv_prev.second 		> BSHV_SECOND_UPPER_BOUNDARY)) 			{ SetBshvRangeError(); return;}
