@@ -88,7 +88,7 @@ static NodeMicrosecond* CreateNodeMicrosecond(signed int mcs, EntryCore1553* ent
 	return new_item;
 }
 
-int CountItemsInListMicrosecondNew(NodeMicrosecond* p_start)
+int CountItemsInListMicrosecond(NodeMicrosecond* p_start)
 {
 	NodeMicrosecond *this = p_start;		// указатель на текущий элемент списка
 	int n = 0;
@@ -146,7 +146,7 @@ void RemoveItemFromListMicrosecond(NodeMicrosecond* this_item)
 	this_item = NULL;
 
 	// посчитать количество сообщений в списке на текущую секунду
-	unsigned int n = CountItemsInListMicrosecondNew(p_enter);
+	unsigned int n = CountItemsInListMicrosecond(p_enter);
 
 	// если на текущую секунду нет записей, удалить текущую секунду БШВ из списка секунд
 	if (n == 0)
@@ -199,21 +199,6 @@ int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, sign
 	return EXIT_FAILURE;
 }
 
-/*
-int CountItemsInListMicrosecond(NodeMicrosecond** p_start)
-{
-	NodeMicrosecond *start = *p_start;	// указатель на первый элемент списка
-	NodeMicrosecond *this = start;		// указатель на текущий элемент списка
-	int n = 0;
-	while(this)
-	{
-		n++;
-		this = this->next;
-	}
-	if (n<2) { return -1; }	// Ошибка! В списке должно быть минимум два (сторожевых) элемента.
-	return (n-2);			// n - кол-во элементов в списке, не считая сторожевых эл-тов
-}
-*/
 
 void CreateListMicrosecond(NodeMicrosecond** p_start)
 {

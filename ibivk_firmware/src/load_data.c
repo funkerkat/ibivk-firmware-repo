@@ -20,6 +20,7 @@
 // прототипы функций
 #include "list_microseconds.h"
 #include "list_bshv.h"
+#include "tmi.h"
 
 int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 {
@@ -37,6 +38,10 @@ int LoadPacketF1(BshvExtention* b, unsigned int cw, unsigned short dw[])
 
 	// Добавить текущую микросекунду в список микросекунд
 	AddNodeMicrosecondItem(&(thisNodeBshv->ptr), p_entry, b->microsecond, thisNodeBshv);
+
+	// Вычислить количество записей на текущий момент
+	int k = CountTotalItems(node_bshv_start);
+	SetNumberOfMessages(k);
 
 	return EXIT_SUCCESS;
 }
@@ -59,6 +64,10 @@ int LoadPacketF2(BshvExtention* b, unsigned int cw)
 
 	// Добавить текущую микросекунду в список микросекунд
 	AddNodeMicrosecondItem(&(thisNodeBshv->ptr), p_entry, b->microsecond, thisNodeBshv);
+
+	// Вычислить количество записей на текущий момент
+	int k = CountTotalItems(node_bshv_start);
+	SetNumberOfMessages(k);
 
 	return EXIT_SUCCESS;
 }

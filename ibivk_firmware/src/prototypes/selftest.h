@@ -8,7 +8,7 @@
 #ifndef SELFTEST_H_
 #define SELFTEST_H_
 
-void Uart2_ErrorDetected(unsigned int);
+void Uart2_Selftest(unsigned int error_detected);
 void InitSelftest();
 void PmoSelftest(unsigned int error_code);
 void SetBshvRangeError();

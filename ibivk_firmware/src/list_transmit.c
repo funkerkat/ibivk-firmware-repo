@@ -65,27 +65,27 @@ void SendItemToUart()
 	switch(item->packet_id)
 	{
 		case ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER:
-			DiagnosticAnswer  (item->data.data_diagnostic_answer.receiver_id,
+			Uart_send_diagnostic_answer  (item->data.data_diagnostic_answer.receiver_id,
 							   item->data.data_diagnostic_answer.receiver_cs,
 							   item->data.data_diagnostic_answer.code_error);
 			break;
 
 
 		case ID_PACKET_IBIVK_TO_PC_TM:
-			RS485_send_tmi(item->data.data_tmi.p_tmi);
+			Uart_send_tmi(item->data.data_tmi.p_tmi);
 			// очистить телеметрию
 			CleanTmi();
 			break;
 
 
 		case ID_PACKET_IBIVK_TO_PC_F1:
-			IbivkToPcMessageF1(item->data.data_ibivk_to_pc_f1.myBshvExtenion,
+			Uart_send_ibivk_to_pc_f1(item->data.data_ibivk_to_pc_f1.myBshvExtenion,
 							   item->data.data_ibivk_to_pc_f1.command_word,
 							   item->data.data_ibivk_to_pc_f1.status_word);
 			break;
 
 		case ID_PACKET_IBIVK_TO_PC_F2:
-			IbivkToPcMessageF2(item->data.data_ibivk_to_pc_f2.myBshvExtenion,
+			Uart_send_ibivk_to_pc_f2(item->data.data_ibivk_to_pc_f2.myBshvExtenion,
 							   item->data.data_ibivk_to_pc_f2.command_word,
 							   item->data.data_ibivk_to_pc_f2.status_word,
 							   item->data.data_ibivk_to_pc_f2.data_words);

@@ -12,6 +12,9 @@
 #include "nodes.h"
 #include "watch_node_values.h"
 
+// прототипы функций
+#include "list_microseconds.h"
+
 // глобальная переменная -- точка входа в список секунд БШВ
 NodeBshv* node_bshv_start;
 
@@ -135,6 +138,32 @@ NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b)
 		this = (NodeBshv*)this->next;
 	}
 	return NULL;
+}
+
+int CountTotalItems(NodeBshv* p_start)
+{
+	NodeBshv *start = p_start;	// указатель на первый элемент списка
+	NodeBshv *this = start;		// указатель на текущий элемент списка
+
+	// пропустить первый (сторожевой) элемент списка
+	this = this->next;
+
+	// подсчитать количество записей
+	int n = 0;
+	while(this->next)
+	{
+		// определить указатель на список микросекунд
+		NodeMicrosecond* p_mcs = this->ptr;
+
+		//посчитать количество элементов в текущей секунде
+		int k = CountItemsInListMicrosecond(p_mcs);
+		n += k;
+
+		// переключиться на следующую секунду
+		this = this->next;
+	}
+
+	return n;
 }
 
 int CountItemsInListBshv(NodeBshv** p_start)

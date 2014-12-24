@@ -13,5 +13,6 @@
 void InitListBshv();
 void RemoveItemFromNodeBshvList(NodeBshv* this_item);
 NodeBshv* AddNodeBshvItem(NodeBshv** p_start, Bshv* b);
+int CountTotalItems(NodeBshv* p_start);
 
 #endif /* LIST_BSHV_H_ */

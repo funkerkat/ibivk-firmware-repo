@@ -11,5 +11,6 @@
 void InitTmi();
 void UpdateIntegralParams();
 void CleanTmi();
+void SetNumberOfMessages(unsigned int n);
 
 #endif /* TMI_H_ */

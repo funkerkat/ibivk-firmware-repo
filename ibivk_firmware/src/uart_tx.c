@@ -47,7 +47,7 @@ static void AddServiceBytes(unsigned int data[], unsigned int n_data, unsigned i
 	}
 }
 
-void DiagnosticAnswer(unsigned int received_id, unsigned int received_cs, unsigned int error_code)
+void Uart_send_diagnostic_answer(unsigned int received_id, unsigned int received_cs, unsigned int error_code)
 {
 	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_DIAGNOSTIC_ANSWER)
 	unsigned int data[DATA_LENGH];
@@ -62,7 +62,7 @@ void DiagnosticAnswer(unsigned int received_id, unsigned int received_cs, unsign
 	#undef DATA_LENGH
 }
 
-void IbivkToPcMessageF1(BshvExtention bshv_ext, unsigned short cw, unsigned short sw)
+void Uart_send_ibivk_to_pc_f1(BshvExtention bshv_ext, unsigned short cw, unsigned short sw)
 {
 	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + bshv_byte_size + commandword_byte_size + statusword_byte_size)
 	unsigned int data[DATA_LENGH];
@@ -89,7 +89,7 @@ void IbivkToPcMessageF1(BshvExtention bshv_ext, unsigned short cw, unsigned shor
 	#undef DATA_LENGH
 }
 
-void IbivkToPcMessageF2(BshvExtention bshv_ext, unsigned short cw, unsigned short sw, unsigned short dw[])
+void Uart_send_ibivk_to_pc_f2(BshvExtention bshv_ext, unsigned short cw, unsigned short sw, unsigned short dw[])
 {
 	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + bshv_byte_size + commandword_byte_size + statusword_byte_size)
 	unsigned int n_dw;
@@ -127,7 +127,7 @@ void IbivkToPcMessageF2(BshvExtention bshv_ext, unsigned short cw, unsigned shor
 }
 
 
-void RS485_send_tmi(Tmi* this_tmi)
+void Uart_send_tmi(Tmi* this_tmi)
 {
 	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_TMI)
 	unsigned int data[DATA_LENGH];

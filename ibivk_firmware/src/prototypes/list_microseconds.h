@@ -11,5 +11,6 @@
 void CreateListMicrosecond(NodeMicrosecond** p_start);
 int AddNodeMicrosecondItem(NodeMicrosecond** p_start, EntryCore1553* entry, signed int mcs, NodeBshv* thisNodeBshv);
 void RemoveItemFromListMicrosecond(NodeMicrosecond* this_item);
+int CountItemsInListMicrosecond(NodeMicrosecond* p_start);
 
 #endif /* LIST_MICROSECONDS_H_ */
