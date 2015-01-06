@@ -27,7 +27,7 @@
 #define BSHV_TRANSCEIVER_CONFIG_PRESCALER_VALUE		23
 
 // Выбор источника формирования сигналов 1Гц, ОЦ0, ОЦ1, НФ-осн, НФ-рез
-#define BSHV_TRANSCEIVER_CONFIG_SOURCE_VALUE		INTERNAL	// (INTERNAL / EXTERNAL)
+#define BSHV_TRANSCEIVER_CONFIG_SOURCE_VALUE		EXTERNAL	// (INTERNAL / EXTERNAL)
 
 //Выбор источника тактовой частоты IP Core (внутренний/внешний)
 #define BSHV_TRANSCEIVER_CONFIG_REF_CLK_VALUE		INTERNAL	// (INTERNAL / EXTERNAL)
@@ -56,6 +56,12 @@
 // #######################  Функции IP CORE BSHV_TRANSCEIVER: #######################
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define BSHV_TRANSCEIVER_SOFTWARE_RESET()	{ *((int*)(REG_BSHVTRANSCEIVER_CONFIG)) = 0x01; asm("nop"); asm("nop"); asm("nop"); }
+
+#define BSHV_TRANSCEIVER_INIT()												\
+{																			\
+	BSHV_TRANSCEIVER_SOFTWARE_RESET();										\
+	*((int*)(REG_BSHVTRANSCEIVER_CONFIG)) = BSHV_TRANSCEIVER_CONFIG_VALUE;	\
+}
 
 // ----- Команды (регистр COM) -----
 #define COMMAND_MASK_NF_SEC		13

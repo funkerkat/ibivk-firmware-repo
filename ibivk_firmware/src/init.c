@@ -11,7 +11,7 @@
 #include "xUart.h"
 #include "xTimer.h"
 #include "xGrgpio.h"
-#include "xFpgaIbivk.h"
+#include "xBshvtransceiver.h"
 
 // прототипы функций
 #include "list_bshv.h"
@@ -60,7 +60,7 @@ void InitIbivk()
 	GRGPIO_INIT();
 
 	// инициализация ПЛИС
-	FPGA_IBIVK_INIT();
+	BSHV_TRANSCEIVER_INIT();
 
 	// инициализация связного списка, содержащего секунды (сторожевые элементы)
 	InitListBshv();

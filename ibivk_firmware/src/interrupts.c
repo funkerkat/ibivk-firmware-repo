@@ -55,6 +55,10 @@ void Handler_irq_4()
 	//timer1_type = CONTROL_1HZ;
 	//TIMER1_START(700);
 
+	/*
+	VersionPmo ver;
+	BshvTransceiver_Get_VersionPmo(&ver);
+	 */
 
 	// чтение телеметрии IP CORE BSHV TRANSCEIVER
 	BshvTransceiverTm tmi;
@@ -64,15 +68,24 @@ void Handler_irq_4()
 	Bshv b;
 	BshvTransceiver_Get_Bshv(&b);
 
+	// --------------------------------------------------
+	// Заплатка:
+	b.day++;
+	// --------------------------------------------------
+
 	// Проверка значений БШВ на диапазон
 	unsigned int result = ValidateBshvBoundaries(&b);
-	if (result == EXIT_FAILURE) { SetBshvRangeError(); }
-
-	VersionPmo ver;
-	BshvTransceiver_Get_VersionPmo(&ver);
-
-	// спрогнозировать значение следующей секунды
-	PredictNextBshvValue(&predict_bshv);
+	if (result == EXIT_FAILURE)
+	{
+		SetBshvRangeError();
+	}
+	else
+	{
+		// скопировать считанное из IP CORE BSHV TRANSCEIVER значение БШВ в переменную predict_bshv
+		CopyBshv(&b, &predict_bshv);
+		// спрогнозировать значение следующей секунды
+		PredictNextBshvValue(&predict_bshv);
+	}
 }
 
 // -- TIMER 1 --
@@ -143,7 +156,7 @@ void Handler_irq_15()
 	// перейти к обработке сообщений
 	HertzHandler();
 
-	//SendTmi();
+	SendTmi();
 }
 
 // -- Default (not used) --

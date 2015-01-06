@@ -57,25 +57,25 @@ void InitSelftest()
 void SetNorma1HzError()
 {
 	ibivk_tmi.selftest_input_signals.norma_1hz = NOT_NORMAL;
-	SendTmiNotNormal();
+	///SendTmiNotNormal();
 }
 
 void SetNorma320msError()
 {
 	ibivk_tmi.selftest_input_signals.norma_320ms = NOT_NORMAL;
-	SendTmiNotNormal();
+	///SendTmiNotNormal();
 }
 
 void SetBshvRangeError()
 {
 	ibivk_tmi.selftest_input_signals.norma_range_bshv = NOT_NORMAL;
-	SendTmiNotNormal();
+	///SendTmiNotNormal();
 }
 
 void SetFpga32impulseError()
 {
 	ibivk_tmi.selftest_input_signals.norma_32_impulse = NOT_NORMAL;
-	SendTmiNotNormal();
+	///SendTmiNotNormal();
 }
 
 void Uart1_Selftest(unsigned int error_detected)
