@@ -10,9 +10,10 @@
 // библиотеки текущего проекта
 #include "tmi_struct.h"
 #include "programm_errors.h"
+#include "lib_bshv_transceiver.h"
 
 // прототипы функций
-#include "fpga_ibivk.h"
+///#include "fpga_ibivk.h"
 
 Tmi ibivk_tmi;
 
@@ -70,9 +71,9 @@ void InitTmi()
 	ibivk_tmi.ver_mk_pmo.pmo_day 			= VER_PMO_MK_DAY;
 	ibivk_tmi.ver_mk_pmo.pmo_revision 		= VER_PMO_MK_REVISION;
 
-	// установить версию ПМО ПЛИС
+	// установить версию ПМО ПЛИС (?)
 	VersionPmo pmo_fpga;
-	GetVersionFpga(&pmo_fpga);
+	BshvTransceiver_Get_VersionPmo(&pmo_fpga);
 	ibivk_tmi.ver_fpga_pmo.pmo_year 		= pmo_fpga.pmo_year;
 	ibivk_tmi.ver_fpga_pmo.pmo_month 		= pmo_fpga.pmo_month;
 	ibivk_tmi.ver_fpga_pmo.pmo_day 			= pmo_fpga.pmo_day;

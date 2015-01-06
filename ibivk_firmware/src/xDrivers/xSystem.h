@@ -8,6 +8,9 @@
 #ifndef XSYSTEM_H_
 #define XSYSTEM_H_
 
+#include "programm_errors.h"
+#include "selftest.h"
+
 #define SYSTEM_CLOCK		24000000
 
 #ifndef NULL

@@ -13,5 +13,6 @@ void InitSelftest();
 void PmoSelftest(unsigned int error_code);
 void SetBshvRangeError();
 void SetFpga32impulseError();
+void SetNorma320msError();
 
 #endif /* SELFTEST_H_ */

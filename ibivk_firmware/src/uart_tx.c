@@ -47,10 +47,10 @@ static void AddServiceBytes(unsigned int data[], unsigned int n_data, unsigned i
 	}
 }
 
-void Uart_send_diagnostic_answer(unsigned int received_id, unsigned int received_cs, unsigned int error_code)
+static void Uart_send_diagnostic_answer(unsigned int received_id, unsigned int received_cs, unsigned int error_code)
 {
-	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_DIAGNOSTIC_ANSWER)
-	unsigned int data[DATA_LENGH];
+	#define DATA_UNDER_CS_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_DIAGNOSTIC_ANSWER)
+	unsigned int data[DATA_UNDER_CS_LENGH];
 
 	// Заполнить информационные байты
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 0] = received_cs;
@@ -58,14 +58,14 @@ void Uart_send_diagnostic_answer(unsigned int received_id, unsigned int received
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 2] = error_code;
 
 	// Добавить слежубные байты
-	AddServiceBytes(data, DATA_LENGH, ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER);
-	#undef DATA_LENGH
+	AddServiceBytes(data, DATA_UNDER_CS_LENGH, ID_PACKET_IBIVK_TO_PC_DIAGNOSTIC_ANSWER);
+	#undef DATA_UNDER_CS_LENGH
 }
 
-void Uart_send_ibivk_to_pc_f1(BshvExtention bshv_ext, unsigned short cw, unsigned short sw)
+static void Uart_send_ibivk_to_pc_f1(BshvExtention bshv_ext, unsigned short cw, unsigned short sw)
 {
-	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + bshv_byte_size + commandword_byte_size + statusword_byte_size)
-	unsigned int data[DATA_LENGH];
+	#define DATA_UNDER_CS_LENGH 	(SERVICE_BYTES_LENGTH + bshv_byte_size + commandword_byte_size + statusword_byte_size)
+	unsigned int data[DATA_UNDER_CS_LENGH];
 
 	// Заполнить информационные байты
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 0] = bshv_ext.myBshv.fouryears;
@@ -85,17 +85,17 @@ void Uart_send_ibivk_to_pc_f1(BshvExtention bshv_ext, unsigned short cw, unsigne
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 12] = sw >> (8*0);
 
 	// Добавить слежубные байты
-	AddServiceBytes(data, (DATA_LENGH), ID_PACKET_IBIVK_TO_PC_F2);
-	#undef DATA_LENGH
+	AddServiceBytes(data, (DATA_UNDER_CS_LENGH), ID_PACKET_IBIVK_TO_PC_F2);
+	#undef DATA_UNDER_CS_LENGH
 }
 
-void Uart_send_ibivk_to_pc_f2(BshvExtention bshv_ext, unsigned short cw, unsigned short sw, unsigned short dw[])
+static void Uart_send_ibivk_to_pc_f2(BshvExtention bshv_ext, unsigned short cw, unsigned short sw, unsigned short dw[])
 {
-	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + bshv_byte_size + commandword_byte_size + statusword_byte_size)
+	#define DATA_UNDER_CS_LENGH 	(SERVICE_BYTES_LENGTH + bshv_byte_size + commandword_byte_size + statusword_byte_size)
 	unsigned int n_dw;
 	MIL1553_GET_WORDCOUNT(cw, &n_dw);
 	if (n_dw == 0) { n_dw = 32; }
-	unsigned int data[DATA_LENGH + n_dw*2];
+	unsigned int data[DATA_UNDER_CS_LENGH + n_dw*2];
 
 	// Заполнить информационные байты
 	data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + 0] = bshv_ext.myBshv.fouryears;
@@ -122,15 +122,15 @@ void Uart_send_ibivk_to_pc_f2(BshvExtention bshv_ext, unsigned short cw, unsigne
 	}
 
 	// Добавить слежубные байты
-	AddServiceBytes(data, (DATA_LENGH + n_dw*2), ID_PACKET_IBIVK_TO_PC_F2);
-	#undef DATA_LENGH
+	AddServiceBytes(data, (DATA_UNDER_CS_LENGH + n_dw*2), ID_PACKET_IBIVK_TO_PC_F2);
+	#undef DATA_UNDER_CS_LENGH
 }
 
 
-void Uart_send_tmi(Tmi* this_tmi)
+static void Uart_send_tmi(Tmi* this_tmi)
 {
-	#define DATA_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_TMI)
-	unsigned int data[DATA_LENGH];
+	#define DATA_UNDER_CS_LENGH 	(SERVICE_BYTES_LENGTH + BYTECOUNT_TMI)
+	unsigned int data[DATA_UNDER_CS_LENGH];
 
 	// - - - - - - - - - - - - - - - -
 	// Заполнить информационные байты:
@@ -188,6 +188,6 @@ void Uart_send_tmi(Tmi* this_tmi)
 	// - - - - - - - - - - - - - - - -
 
 	// Добавить слежубные байты
-	AddServiceBytes(data, DATA_LENGH, ID_PACKET_IBIVK_TO_PC_TM);
-	#undef DATA_LENGH
+	AddServiceBytes(data, DATA_UNDER_CS_LENGH, ID_PACKET_IBIVK_TO_PC_TM);
+	#undef DATA_UNDER_CS_LENGH
 }

@@ -5,10 +5,11 @@
  *      Author: Ludmila
  */
 
+#include "xVersionPmo.h"
+#include "bshv_struct.h"
+
 #ifndef TMI_STRUCT_H_
 #define TMI_STRUCT_H_
-
-#include "bshv_struct.h"
 
 #define MAX_NUMBER_OF_MESSAGES_LOADED		30000
 #define MAX_PERCENT_LOADED					99
@@ -26,14 +27,6 @@ enum _NormaTmi
 	 NORMAL 			= 0,
 	 NOT_NORMAL 		= 1,
  };
-
-typedef struct _VersionPmo
-{
-	unsigned char pmo_year;
-	unsigned char pmo_month;
-	unsigned char pmo_day;
-	unsigned char pmo_revision;
-}VersionPmo;
 
 typedef struct _IntegralParams
 {

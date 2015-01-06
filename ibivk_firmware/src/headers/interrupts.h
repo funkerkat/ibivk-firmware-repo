@@ -9,5 +9,6 @@
 #define INTERRUPTS_H_
 
 void InitInterruptHandlers();
+void InitTimerType();
 
 #endif /* INTERRUPTS_H_ */

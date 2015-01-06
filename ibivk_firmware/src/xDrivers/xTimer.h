@@ -74,7 +74,7 @@
 	*((int*)(TIMER_BASE_ADDRESS + REG_TIMER3_RELOAD_VALUE)) 	= 0;					\
 }
 
-#define TIMER1_START(value)																\
+#define TIMER1_START(value)		{}														\
 {																						\
 	*((int*)(TIMER_BASE_ADDRESS + REG_TIMER1_RELOAD_VALUE)) 	= 0;					\
 	*((int*)(TIMER_BASE_ADDRESS + REG_TIMER1_COUNTER_VALUE)) 	= value;				\

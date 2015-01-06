@@ -15,10 +15,10 @@
 #include "list_transmit_struct.h"
 #include "ibivk_uart_packets.h"
 #include "tmi_struct.h"
+#include "lib_bshv_transceiver.h"
 
 // прототипы функций
 #include "tmi.h"
-#include "fpga_ibivk.h"
 
 
 
@@ -46,11 +46,23 @@ static void SendTmiNotNormal()
 void InitSelftest()
 {
 	// первичное самотестирование ПЛИС
-	unsigned int fpga_selftest_result = InitSelftestFpga();
+	unsigned int fpga_selftest_result = BshvTransceiver_Selftest();
 	if (fpga_selftest_result == EXIT_SUCCESS) 	{ ibivk_tmi.integral_params.norma_fpga = NORMAL; }
 	else 										{ ibivk_tmi.integral_params.norma_fpga = NOT_NORMAL; }
 
 	// Если Норма ИБИВУ = ненорма, выдать телеметрию в УАРТ
+	SendTmiNotNormal();
+}
+
+void SetNorma1HzError()
+{
+	ibivk_tmi.selftest_input_signals.norma_1hz = NOT_NORMAL;
+	SendTmiNotNormal();
+}
+
+void SetNorma320msError()
+{
+	ibivk_tmi.selftest_input_signals.norma_320ms = NOT_NORMAL;
 	SendTmiNotNormal();
 }
 

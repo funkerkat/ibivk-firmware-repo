@@ -49,27 +49,17 @@ static void GetBshvFromPacket(unsigned int data[], BshvExtention* packet_bshv)
 	packet_bshv->microsecond = ((t1 << 8*2)|(t2 << 8*1)|(t3 << 8*0));
 }
 
-static int ValidateBshvBoundaries(BshvExtention* b)
+static int ValidateBshvExtentionBoundaries(BshvExtention* myBshvExtention)
 {
-	if ((b->myBshv.fouryears < BSHV_FOURYEARS_LOWER_BOUNDARY) ||
-		(b->myBshv.fouryears > BSHV_FOURYEARS_UPPER_BOUNDARY))
-	{ return EXIT_FAILURE; }
+	Bshv myBshv = myBshvExtention->myBshv;
+	unsigned int mcs = myBshvExtention->microsecond;
 
-	if ((b->myBshv.day < BSHV_DAY_LOWER_BOUNDARY) ||
-		(b->myBshv.day > BSHV_DAY_UPPER_BOUNDARY))
-	{ return EXIT_FAILURE; }
+	// Проверить значения БШВ на граничные диапазоны
+	unsigned int result_bshv = ValidateBshvBoundaries(&myBshv);
+	if (result_bshv == EXIT_FAILURE) { return EXIT_FAILURE; }
 
-	if ((b->myBshv.hour < BSHV_HOUR_LOWER_BOUNDARY) ||
-		(b->myBshv.hour > BSHV_HOUR_UPPER_BOUNDARY))
-	{ return EXIT_FAILURE; }
-
-	if ((b->myBshv.minute < BSHV_MINUTE_LOWER_BOUNDARY) ||
-		(b->myBshv.minute > BSHV_MINUTE_UPPER_BOUNDARY))
-	{ return EXIT_FAILURE; }
-
-	if ((b->myBshv.second < BSHV_SECOND_LOWER_BOUNDARY) ||
-		(b->myBshv.second > BSHV_SECOND_UPPER_BOUNDARY))
-	{ return EXIT_FAILURE; }
+	// Проверить значения микросекунды на граничные диапазоны
+	if ((mcs < BSHV_MICROSECOND_LOWER_BOUNDARY) || (mcs > BSHV_MICROSECOND_UPPER_BOUNDARY)) { return EXIT_FAILURE; }
 
 	return EXIT_SUCCESS;
 }
@@ -108,45 +98,60 @@ static unsigned int GetDirection(unsigned int cw)
 	return direction;
 }
 
-static void Packet_BC_to_RT(unsigned int data[], unsigned int n)
+
+static unsigned int BytecountValidation(unsigned int id, unsigned int n_info_bytes)
+{
+	switch (id)
+	{
+		case ID_PACKET_PC_TO_IBIVK_F1:
+			if ((n_info_bytes < BYTECOUNT_PACKET_BC_TO_RT_LOWER) || (n_info_bytes > BYTECOUNT_PACKET_BC_TO_RT_UPPER))
+			{ return EXIT_FAILURE; }
+			else
+			{ return EXIT_SUCCESS; }
+		break;
+
+		case ID_PACKET_PC_TO_IBIVK_F2:
+		break;
+
+		case ID_PACKET_PC_TO_IBIVK_CMD:
+		break;
+
+		default:
+			// алгоритмическая ошибка
+			PmoSelftest(ALGORITHM_ERROR_CODE_4);
+			break;
+
+	}
+
+}
+
+
+static void Packet_BC_to_RT(unsigned int id, unsigned int data[], unsigned int n, unsigned int cs)
 {
 	// определить контрольнцю сумму, принятую в пакете
-	unsigned int cs = data[n - 1];
+	//unsigned int cs = data[n - 1];
 
 	// определить идентификатор пакета
-	unsigned int id = data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE - 1];
+	//unsigned int id = data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE - 1];
 
 	// 1. Проверить количество байт в пакете
 	unsigned int n_info_bytes = n - (HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE + CONTROLSUM_SIZE);
-	if ((n_info_bytes < BYTECOUNT_PACKET_BC_TO_RT_LOWER) || (n_info_bytes > BYTECOUNT_PACKET_BC_TO_RT_UPPER))
-	{
-		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
-		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT);
-		return;
-	}
+	unsigned int bytecount_validation = BytecountValidation(id, n_info_bytes);
+	if (bytecount_validation == EXIT_FAILURE) { MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BYTECOUNT); return; }
 
 	// 2. Декодировать значение БШВ и проверить граничные значения БШВ
 	BshvExtention packet_bshv_ext;
 	GetBshvFromPacket(data, &packet_bshv_ext);
-	int bshv_result = ValidateBshvBoundaries(&packet_bshv_ext);
-	if(bshv_result == EXIT_FAILURE)
-	{
-		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
-		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
-		return;
-	}
+	int bshv_result = ValidateBshvExtentionBoundaries(&packet_bshv_ext);
+	if(bshv_result == EXIT_FAILURE) { MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY); return; }
 
 	// 3. Сравнить БШВ с системным БШВ (проверить, не устарел ли пакет)
-	Bshv packet_bshv = packet_bshv_ext.myBshv;;
+	Bshv packet_bshv = packet_bshv_ext.myBshv;
 	Bshv bshv_min_value;
 	CopyBshv(&system_bshv, &bshv_min_value);
 	int k; for (k=0; k<GUARD_TIME_SECONDS; k++) { IncrementBshv(&bshv_min_value, 59); }
 	int result_guard_interval = CompareBshv(&packet_bshv, &bshv_min_value);
-	if (result_guard_interval == FirstValueIsLess)
-	{
-		MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE);
-		return;
-	}
+	if (result_guard_interval == FirstValueIsLess) { MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_TOO_LATE); return; }
 
 	// 3. Декодировать значение командного слова и
 	unsigned int cw = GetCommandWordFromPacket(data);
@@ -205,7 +210,7 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 	// 2. Декодировать значение БШВ и проверить граничные значения БШВ
 	BshvExtention packet_bshv_ext;
 	GetBshvFromPacket(data, &packet_bshv_ext);
-	int bshv_result = ValidateBshvBoundaries(&packet_bshv_ext);
+	int bshv_result = ValidateBshvExtentionBoundaries(&packet_bshv_ext);
 	if(bshv_result == EXIT_FAILURE)
 	{
 		//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_BSHV_BOUNDARY);
@@ -252,7 +257,7 @@ static void Packet_RT_to_BC(unsigned int data[], unsigned int n)
 void UartDecode(unsigned int data[], unsigned int n)
 {
 	// определить идентификатор пакета
-	unsigned int id = data[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE - 1];
+	unsigned int id = data[HEAD_SIZE + PACKET_ID_SIZE - 1];
 
 	// определить контрольнцю сумму, принятую в пакете
 	unsigned int cs = data[n - 1];
@@ -260,16 +265,19 @@ void UartDecode(unsigned int data[], unsigned int n)
 	switch(id)
 	{
 		case ID_PACKET_PC_TO_IBIVK_F1:
-			Packet_BC_to_RT(data, n);
+			Packet_BC_to_RT(id, data, n, cs);
 			break;
 
 		case ID_PACKET_PC_TO_IBIVK_F2:
 			Packet_RT_to_BC(data, n);
 			break;
 
+		case ID_PACKET_PC_TO_IBIVK_CMD:
+
+			break;
+
 		default:
 			// "Ошибка: неверный идентификатор пакета"
-			//DiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_ID);
 			MakeDiagnosticAnswer(cs, id, DIAGNOSTIC_ANSWER_ERROR_ID);
 			break;
 	}

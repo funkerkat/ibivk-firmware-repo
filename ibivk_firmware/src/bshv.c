@@ -17,11 +17,11 @@ unsigned int bshv_correction;
 void InitSystemBshv()
 {
 	// значение, которое необходимо установить как системное время с ближайшего импульса 1 Гц
-	bshv_prev.fouryears = 0;
-	bshv_prev.day = 0;
-	bshv_prev.hour = 0;
-	bshv_prev.minute = 0;
-	bshv_prev.second = 0;
+	predict_bshv.fouryears = 0;
+	predict_bshv.day = 0;
+	predict_bshv.hour = 0;
+	predict_bshv.minute = 0;
+	predict_bshv.second = 0;
 
 	// системное время ИБИВК
 	system_bshv.fouryears = 1;
@@ -65,6 +65,27 @@ void IncrementBshv(Bshv* myBshv, unsigned int second_value)
 
 	if (myBshv->fouryears < BSHV_FOURYEARS_UPPER_BOUNDARY) 	{ (myBshv->fouryears)++; return; }
 	else 													{ (myBshv->second) = 0; (myBshv->minute) = 0; (myBshv->hour) = 0; (myBshv->day) = 0; (myBshv->fouryears) = 0; }
+}
+
+unsigned int ValidateBshvBoundaries(Bshv* myBshv)
+{
+	// Проверка значений БШВ на диапазон
+	if ((myBshv->second 		< BSHV_SECOND_LOWER_BOUNDARY) 	||
+		(myBshv->second 		> BSHV_SECOND_UPPER_BOUNDARY)) 			{ return EXIT_FAILURE;}
+
+	if ((myBshv->minute 		< BSHV_MINUTE_LOWER_BOUNDARY) 	||
+		(myBshv->minute 		> BSHV_MINUTE_UPPER_BOUNDARY)) 			{ return EXIT_FAILURE;}
+
+	if ((myBshv->hour 			< BSHV_HOUR_LOWER_BOUNDARY) 	||
+		(myBshv->hour 			> BSHV_HOUR_UPPER_BOUNDARY)) 			{ return EXIT_FAILURE;}
+
+	if ((myBshv->day 			< BSHV_DAY_LOWER_BOUNDARY) 		||
+		(myBshv->day 			> BSHV_DAY_UPPER_BOUNDARY)) 			{ return EXIT_FAILURE;}
+
+	if ((myBshv->fouryears 		< BSHV_FOURYEARS_LOWER_BOUNDARY)||
+		(myBshv->fouryears 		> BSHV_FOURYEARS_UPPER_BOUNDARY)) 		{ return EXIT_FAILURE;}
+
+	return EXIT_SUCCESS;
 }
 
 void PredictNextBshvValue(Bshv* myBshv)

@@ -9,15 +9,7 @@
 #define BSHV_STRUCT_H_
 
 #include "compare.h"
-
-typedef struct _Bshv
-{
-	signed int fouryears;
-	signed int day;
-	signed int hour;
-	signed int minute;
-	signed int second;
-}Bshv;
+#include "xBshv.h"
 
 typedef struct _BshvExtention
 {
@@ -32,7 +24,7 @@ extern Bshv system_bshv;
 extern unsigned int bshv_correction;
 
 // глобальная переменная -- БШВ, которое после ближайшего импульса 1 Гц будет установлено как системное
-extern Bshv bshv_prev;
+extern Bshv predict_bshv;
 
 enum BshvCorrectionCodes
  {
@@ -64,6 +56,9 @@ enum BshvBoundary
 	 BSHV_SECOND_LOWER_BOUNDARY 		= 0,
 	 //BSHV_SECOND_UPPER_BOUNDARY 		= 59,
 	 BSHV_SECOND_UPPER_BOUNDARY 		= 60,
+
+	 BSHV_MICROSECOND_LOWER_BOUNDARY 	= 0,
+	 BSHV_MICROSECOND_UPPER_BOUNDARY 	= 999999,
  };
 
 // Прототипы функций

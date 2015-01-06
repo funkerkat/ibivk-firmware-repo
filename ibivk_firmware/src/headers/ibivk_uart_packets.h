@@ -33,6 +33,7 @@ enum PacketIDs
  {
 	 ID_PACKET_PC_TO_IBIVK_F1 					= 0x50,
 	 ID_PACKET_PC_TO_IBIVK_F2 					= 0x51,
+	 ID_PACKET_PC_TO_IBIVK_CMD 					= 0x55,
 
 	 ID_PACKET_IBIVK_TO_PC_F1 					= 0x81,
 	 ID_PACKET_IBIVK_TO_PC_F2 					= 0x82,

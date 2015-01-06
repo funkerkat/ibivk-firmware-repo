@@ -12,10 +12,12 @@
 #include "ibivk_uart_packets.h"
 #include "control_sum.h"
 #include "uart.h"
+#include "programm_errors.h"
 
 // прототипы функций
 #include "uart_decode.h"
 #include "list_transmit.h"
+#include "selftest.h"
 
 unsigned int buffer[BUFFER_LENGTH];
 
@@ -55,7 +57,7 @@ static int SearchHead(unsigned int n)
 }
 
 
-static void SearchInBuffer(ReceiveBufferParams* params )
+static void SearchInBuffer2(ReceiveBufferParams* params )
 {
 
 	unsigned int info_bytes_size;
@@ -120,6 +122,73 @@ static void SearchInBuffer(ReceiveBufferParams* params )
 	}
 
 }
+
+
+
+static void SearchInBuffer(ReceiveBufferParams* params )
+{
+	unsigned int info_bytes_size;
+
+    // ----- Поиск заголовка: -----
+    if ((params->buffer_cnt) <= HEAD_SIZE)
+	{
+    	int result_head_search = SearchHead((params->buffer_cnt));
+    	if (result_head_search == EXIT_FAILURE) { BufferShift(params); }
+    	else { (params->validate_cnt)++; }
+	}
+    // ----- Принять ID: -----
+    else if ((params->buffer_cnt) == (HEAD_SIZE + PACKET_ID_SIZE))
+    {
+    	(params->validate_cnt)++;
+    }
+    // ----- Принять N: -----
+    else if ((params->buffer_cnt) == (HEAD_SIZE + PACKET_ID_SIZE + PACKETLENGTH_SIZE))
+    {
+    	// определить количество байт данных N (байт)
+    	info_bytes_size = buffer[(HEAD_SIZE + PACKET_ID_SIZE + PACKETLENGTH_SIZE) - 1];
+    	(params->validate_cnt)++;
+    }
+	// ----- Продолжить набор байт данных: -----
+    else if ((params->buffer_cnt) < (HEAD_SIZE + PACKET_ID_SIZE + PACKETLENGTH_SIZE + info_bytes_size + CONTROLSUM_SIZE))
+	{
+    	(params->validate_cnt)++;
+	}
+	// ----- Набор данных завершен: -----
+	else if ((params->buffer_cnt) == (HEAD_SIZE + PACKET_ID_SIZE + PACKETLENGTH_SIZE + info_bytes_size + CONTROLSUM_SIZE))
+	{
+		(params->validate_cnt)++;
+
+    	// 1. посчитать контрольную сумму
+		unsigned int cs_r = ControlSum(4, buffer, (PACKET_ID_SIZE + PACKETLENGTH_SIZE + info_bytes_size));
+		unsigned int cs_p = buffer[(params->buffer_cnt)-1];
+
+		cs_r = cs_p;
+
+    	// 2. по результату контрольной суммы:
+		if(cs_r == cs_p)
+		{
+			UartDecode(buffer, (HEAD_SIZE + PACKET_ID_SIZE + PACKETLENGTH_SIZE + info_bytes_size + CONTROLSUM_SIZE));
+    		BufferClear(params);
+		}
+		else
+		{
+			// "Ошибка: несовпадение контрольной суммы"
+			unsigned int id = buffer[HEAD_SIZE + PACKETLENGTH_SIZE + PACKET_ID_SIZE - 1];
+			MakeDiagnosticAnswer(cs_p, id, DIAGNOSTIC_ANSWER_ERROR_CS);
+    		BufferShift(params);
+		}
+	}
+	// ----- Ошибка: -----
+	else
+	{
+		// алгоритмическая ошибка
+		PmoSelftest(ALGORITHM_ERROR_CODE_3);
+		int t = 0;
+		t++;
+	}
+
+}
+
 
 void AddByteToBuffer(unsigned int val)
 {
